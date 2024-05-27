@@ -416,12 +416,17 @@ padding: 5px;
     color:#fb774b;
     text-decoration: none;
     font-size: 15px;
+    background-color: white;
+    border: none;
+    width:100px;
 }
 
 .cart .edit-btn{
     color:#fb774b;
     text-decoration: none;
-    font-size:14px;
+    font-size: 15px;
+    background-color: white;
+    border: none;
 }
 
 .cart .product-info p{

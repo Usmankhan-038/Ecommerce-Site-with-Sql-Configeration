@@ -36,7 +36,7 @@ else{
    <nav class="navbar navbar-expand-lg bg-white py-3 fixed-top">
     <div class="container">
       <img class="logo" src="assets/imgs/logo.jpg"/>
-      <h2 class="brand">Orange</h2>
+      <h2 class="brand">APELLO Cloths</h2>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -86,7 +86,7 @@ else{
             
 
             <div class="col-lg-5 col-md-6 col-sm-12">
-                <img class="img-fluid w-100 pb-1" src="assets/imgs/<?php echo $row['product_image2']?>" id="mainImg"/>
+                <img class="img-fluid w-100 pb-1" src="assets/imgs/<?php echo $row['product_image4']?>" id="mainImg"/>
                 <div class="small-img-group">
                     <div class="small-img-col">
                         <img src="assets/imgs/<?php echo $row['product_image3']?>" width="100%" class="small-img"/>
@@ -108,7 +108,7 @@ else{
                 </div>
             </div>
           </form>
-            <div class="col-lg-6 col-md-12 col-sm-12"></div>
+            <div class="col-lg-6 col-md-12 col-sm-12">
             <h6>Men/Shoes</h6>
             <h3 class="py-4"><?php echo $row['product_name']?></h3>
             <h2><?php echo $row['product_price']?></h2>
