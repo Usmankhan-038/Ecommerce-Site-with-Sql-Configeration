@@ -69,6 +69,19 @@ else
 {
     header('location:index.php');
 }
+
+
+function calculateTotalCart()
+{
+    $total=0;
+    foreach($_SESSION['cart'] as $key => $value)
+    {
+        $total = $total + $value['product_quantity']*$value['product_price'];
+    }
+    $_SESSION['total']=$total;
+}
+
+calculateTotalCart();
 ?>
 
 
@@ -172,7 +185,7 @@ else
             </td>
             <td>
                 <span>$</span>
-                <span class="product-price"><?php echo $value['product_price']; ?></span>
+                <span class="product-price"><?php echo $value['product_quantity']*$value['product_price']; ?></span>
             </td>
         </tr>
         <?php } ?>
@@ -182,13 +195,8 @@ else
 <div class="cart-total">
     <table>
         <tr>
-            <td>Subtotal</td>
-            <td>$155</td>
-
-        </tr>
-        <tr>
             <td>Total</td>
-            <td>$155</td>
+            <td><?php echo $_SESSION['total'];?></td>
         </tr>
     </table>
 
@@ -196,7 +204,9 @@ else
 
 
 <div class="checkout-container">
-    <button class="btn checkout-btn">Checkout</button>
+    <form method="POST" action="checkout.php">
+    <input type="submit" class="btn checkout-btn" value="Checkout" name="checkout">
+        </form>
 </div>
     
 </section>
