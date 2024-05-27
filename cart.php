@@ -1,3 +1,56 @@
+<?php
+session_start();
+
+if(isset($_POST['add_to_cart']))
+{
+    if(isset($_SESSION['cart']))
+    {
+        $item_array_id = array_column($_SESSION['cart'],'product_id');
+        if(!in_array($_POST['product_id'],$item_array_id))
+        {
+            $count = count($_SESSION['cart']);
+            $item_array = array(
+                'product_id' => $_POST['product_id'],
+                'item_name' => $_POST['hidden_name'],
+                'product_price' => $_POST['hidden_price'],
+                'item_quantity' => $_POST['quantity']
+            );
+            $_SESSION['cart'][$count] = $item_array;
+        }
+        else
+        {
+            echo '<script>alert("Product is already added to cart")</script>';
+            echo '<script>window.location="shop.html"</script>';
+        }
+    }
+    else
+    {
+
+        $product_id=$_POST['product_id'];
+        $product_name=$_POST['product_name'];
+        $product_price=$_POST['product_price'];
+        $product_quantity=$_POST['product_quantity'];
+
+        $item_array = array(
+            'product_id' => $product_id,
+            'item_name' => $product_name,
+            'product_price' => $product_price,
+            'item_quantity' => $product_price
+        );
+        $_SESSION['cart'][0] = $item_array;
+    }
+}
+
+
+
+
+?>
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

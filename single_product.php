@@ -113,6 +113,7 @@ else{
             <h3 class="py-4"><?php echo $row['product_name']?></h3>
             <h2><?php echo $row['product_price']?></h2>
             <form action="cart.php" method="POST">
+            <input type="hidden" name="product_id" value="<?php echo $row['product_id']?>">
                 <input type="hidden" name="product_image" value="<?php echo $row['product_image2']?>">
                 <input type="hidden" name="product_name" value="<?php echo $row['product_name']?>">
                 <input type="hidden" name="product_price" value="<?php echo $row['product_price']?>">
