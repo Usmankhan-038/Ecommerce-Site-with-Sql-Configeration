@@ -68,32 +68,6 @@ else
 {
     header('location:index.php');
 }
-// else if(isset($_POST['update_quantity']))
-// {
-//     foreach($_SESSION['cart'] as $key => $value)
-//     {
-//         if($value['product_id'] == $_POST['product_id'])
-//         {
-//             $_SESSION['cart'][$key]['product_quantity'] = $_POST['product_quantity'];
-//         }
-//     }
-// }
-// else if(isset($_POST['clear_cart']))
-// {
-//     unset($_SESSION['cart']);
-// }
-// else if(isset($_POST['checkout']))
-// {
-//     echo '<script>alert("Checkout")</script>';
-// }
-// else
-// {
-//     echo '<script>alert("Nothing")</script>';
-// }
-
-
-
-
 ?>
 
 
