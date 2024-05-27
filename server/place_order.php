@@ -17,18 +17,20 @@ if(isset($_POST['place_order']))
     $stmt->bind_param("isiisss",$total,$order_status, $user_id,$phone,$city,$address,$order_date);
     $stmt->execute();
     $order_id=$stmt->insert_id;
-    // foreach($_SESSION['cart'] as $key => $value)
-    // {
-    //     $product_id=$value['product_id'];
-    //     $product_name=$value['product_name'];
-    //     $product_price=$value['product_price'];
-    //     $product_quantity=$value['product_quantity'];
-    //     $stmt = $conn->prepare("INSERT INTO order_items (order_id,product_id,product_name,product_price,product_quantity) VALUES (?,?,?,?,?)");
-    //     $stmt->bind_param("iisdi",$order_id,$product_id,$product_name,$product_price,$product_quantity);
-    //     $stmt->execute();
-    // }
-    // unset($_SESSION['cart']);
-    // header('location:order_success.php');
+    foreach($_SESSION['cart'] as $key => $value)
+    {
+        $product=$_SESSION['cart'][$key];
+        $product_id=$value['product_id'];
+        $product_name=$value['product_name'];
+        $product_image=$product['product_image'];
+        $product_price=$value['product_price'];
+        $product_quantity=$value['product_quantity'];
+        $stmt = $conn->prepare("INSERT INTO order_items (order_id,product_id,product_name,product_image,user_id,order_date,product_price,product_qunatity) VALUES (?,?,?,?,?,?,?,?)");
+        $stmt->bind_param("iissisii",$order_id,$product_id,$product_name,$product_image,$user_id,$order_date,$product_price,$product_quantity);
+        $stmt->execute();
+    }
+    
+   // header('location:order_success.php');
 }
 else
 {
