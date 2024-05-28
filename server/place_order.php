@@ -27,7 +27,13 @@ if(isset($_POST['place_order']))
         $product_quantity=$value['product_quantity'];
         $stmt = $conn->prepare("INSERT INTO order_items (order_id,product_id,product_name,product_image,user_id,order_date,product_price,product_qunatity) VALUES (?,?,?,?,?,?,?,?)");
         $stmt->bind_param("iissisii",$order_id,$product_id,$product_name,$product_image,$user_id,$order_date,$product_price,$product_quantity);
-        $stmt->execute();
+        $stmt_status=$stmt->execute();
+
+
+        if(!$stmt_status)
+        {
+            header('location:index.php');
+        }
     }
     //unset($_SESSION['cart']);
     

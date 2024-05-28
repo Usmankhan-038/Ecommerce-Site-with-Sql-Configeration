@@ -18,9 +18,11 @@ session_start();
             <hr class="mx-auto">
         </div>
         <div class="mx-auto container text-center">
-            <p><?php echo $_GET['order_status'];?></p>
-            <p>Total Payment: $ <?php echo $_SESSION['total'];?></p>
-            <input class="btn btn-primary" type="submit" value="Pay Now"/>    
+            <p><?php if(isset($_GET['order_status'])) {echo $_GET['order_status'];}?></p>
+            <?php if(isset($_SESSION['total'])) {?>
+            <p>Total Payment: $ <?php echo $_SESSION['total'];?></p> <?php } ?>
+            <?php if(isset($_GET['order_status']) && $_GET['order_status']== "Not Paid") { ?>
+            <input class="btn btn-primary" type="submit" value="Pay Now"/>   <?php } ?> 
         </div>
 </section>
 
