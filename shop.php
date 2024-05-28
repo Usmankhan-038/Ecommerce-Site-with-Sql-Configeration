@@ -3,12 +3,23 @@
 include('server/connection.php');
 
 
-$stmt = $conn->prepare("SELECT * FROM products");
+if(isset($_POST['search']))
+{
+    $category=$_POST['category'];
+    $price=$_POST['price'];
+    $stmt = $conn->prepare("SELECT * FROM products where product_category=? and product_price<=? ");
+    $stmt->bind_param("si",$category,$price);
+    $stmt->execute();
+    $products=$stmt->get_result();
+}
+else
+{
+    $stmt = $conn->prepare("SELECT * FROM products");
 
-$stmt->execute();
-
-
+    $stmt->execute();
+ 
 $products=$stmt->get_result();
+}
 
 ?>
 
@@ -63,7 +74,7 @@ $products=$stmt->get_result();
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="shop.html">Shop</a>
+            <a class="nav-link" href="shop.php">Shop</a>
           </li>
 
           <li class="nav-item">
@@ -94,33 +105,33 @@ $products=$stmt->get_result();
         <p>Search Product</p>
         <hr>
     </div>
-    <form action="#">
+    <form action="shop.php" method="POST">
         <div class="row mx-auto container">
             <div class="col-lg-12 col-md-12 col-sm-12">
 
                 <p>Category</p>
                 <div class="form-check">
-                    <input type="radio" class="form-check-input" name="category" id="category_one">
+                    <input type="radio" class="form-check-input" value="shoes" name="category" id="category_one">
                     <label for="flexRadioDefault1" class="form-check-label">
-                        Shoes
+                        shoes
                     </label>
                 </div>
                 <div class="form-check">
-                    <input type="radio" class="form-check-input" name="category" id="category_one">
+                    <input type="radio" class="form-check-input" value="coats" name="category" id="category_one">
                     <label for="flexRadioDefault2" class="form-check-label">
                         coats
                     </label>
                 </div>
                 <div class="form-check">
-                    <input type="radio" class="form-check-input" name="category" id="category_one">
-                    <label for="flexRadioDefault3" class="form-check-label">
+                    <input type="radio" class="form-check-input" value="watches" name="category" id="category_one">
+                    <label for="flexRadioDefault2" class="form-check-label">
                         watches
                     </label>
                 </div>
                 <div class="form-check">
-                    <input type="radio" class="form-check-input" name="category" id="category_one">
-                    <label for="flexRadioDefault4" class="form-check-label">
-                        Bags
+                    <input type="radio" class="form-check-input" value="bags" name="category" id="category_one">
+                    <label for="flexRadioDefault2" class="form-check-label">
+                        bags
                     </label>
                 </div>
             </div>
@@ -131,7 +142,7 @@ $products=$stmt->get_result();
             <div class="col-lg-12 col-md-12 col-sm-12">
 
                 <p>Price</p>
-                <input type="range" class="form-range w-50" min="1" max="1000" id="customRange2">
+                <input type="range" class="form-range w-50" min="1" max="1000" id="customRange2" name="price" value="100">
                 <div class="w-50">
                     <span style="float: left;">1</span>
                     <span style="float: right;">1000</span>
@@ -188,87 +199,6 @@ $products=$stmt->get_result();
     </div>
 </section>
 
-
-
-
-
-<!--footer-->
-
-  <footer class="mt-5 py-5">
-    <div class="row container mx-auto pt-5">
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <img class="logo" src="assets/imgs/logo.jpg"/>
-            <p class="pt-3">We provide the best products for the most affordable prices</p>
-        </div>
-        <div class="footner-one col-lg-3 col-md-6 col-sm-12">
-            <h5 class="pb-2">Featured</h5>
-            <ul class="text-uppercase">
-                <li><a href="#">men</a></li>
-                <li><a href="#">women</a></li>
-                <li><a href="#">boys</a></li>
-                <li><a href="#">girls</a></li>
-                <li><a href="#">new arrivals</a></li>
-                <li><a href="#">clothes</a></li>
-
-  </ul>
-        </div>
-        <div class="footner-one col-lg-3 col-md-6 col-sm-12">
-         <h5 class="pb-2">Contact Us</h5>
-         <div>
-            <h6 class="text-uppercase">Address</h6>
-            <p>1234 Street Name,City</p>
-         </div>
-         <div>
-            <h6 class="text-uppercase">PHONE</h6>
-            <p>0300 23234</p>
-         </div>
-         <div>
-            <h6 class="text-uppercase">Email</h6>
-            <p>abc@gmail.com</p>
-         </div>
-            </div>
-            <div class="footner-one col-lg-3 col-md-6 col-sm-12">
-                <h5 class="pb-2">Instagram</h5>
-                <div class="row">
-                    <img src="assets/imgs/featured1.jpg" class="img-fluid w-25 h-100 m-2"/>
-                    <img src="assets/imgs/featured2.jpg" class="img-fluid w-25 h-100 m-2"/>
-                    <img src="assets/imgs/featured3.jpg" class="img-fluid w-25 h-100 m-2"/>
-                    <img src="assets/imgs/featured4.jpg" class="img-fluid w-25 h-100 m-2"/>
-                    <img src="assets/imgs/clothes1.jpg" class="img-fluid w-25 h-100 m-2"/>
-                </div>
-            </div>
-        </div>
-
-
-
-        <div class="copyright mt-5">
-            <div class="row container mx-auto">
-                <div class="col-lg-3 col-md-5 col-sm-12 mb-4 text-nowrap mb-2">
-                    <img src="assets/imgs/payment.jpg"/>
-                </div>
-                <div class="col-lg-3 col-md-5 col-sm-12 mb-4">
-                    <p>eCommerce @ 2025 All the Right Reserved</p>
-                </div>
-                <div class="col-lg-3 col-md-5 col-sm-12 mb-4">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-
-                </div>
-            </div>
-        </div>
-</footer>
-
-
-
-
-
     
     
-    
-    
-    
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>  
-</body>
-</html>
+<?php include('layout/footer.php')?>
