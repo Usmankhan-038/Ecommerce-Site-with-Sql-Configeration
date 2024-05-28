@@ -217,11 +217,13 @@ button:hover{
     transform:translateY(50px);
     opacity:0;
     transition: 0.3s all;
+    color:white;
 }
 
 .product:hover .buy-btn{
     transform:translateY(0px);
     opacity:1;
+    color:white;
     }
 
     hr{

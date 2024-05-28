@@ -1,23 +1,14 @@
 <?php
+
 include('server/connection.php');
 
-if(isset($_POST['order-details-btn']) && isset($_POST['order_id']))
-{
-    $order_id=$_POST['order_id'];
-    $order_status=$_POST['order_status'];
-    $stmt=$conn->prepare("SELECT * FROM order_items WHERE order_id=?");
-    $stmt->bind_param('i',$order_id);
-    $stmt->execute();
-    $order_detail=$stmt->get_result();
-   
-   
-}
-else
-{
 
-   //header('location:account.php');
-}
+$stmt = $conn->prepare("SELECT * FROM products");
 
+$stmt->execute();
+
+
+$products=$stmt->get_result();
 
 ?>
 
@@ -26,13 +17,35 @@ else
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Shop</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
     <link rel="stylesheet"href="assets/css/style.css"/>
+
+    <style>
+    .product img{
+        width: 100%;
+        height:auto;
+        box-sizing:border-box;
+        object-fit:cover;
+
+
+    }
+
+    .pagination a{
+        color:coral;
+
+    }
+
+    .pagination li:hover a{
+        color:#fff;
+        background-color: coral;
+    }
+    </style>
 </head>
 <body>
+
 <!--Navbar-->
     
 <nav class="navbar navbar-expand-lg bg-white py-3 fixed-top">
@@ -46,7 +59,7 @@ else
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
          
           <li class="nav-item">
-            <a class="nav-link" href="index.html">Home</a>
+            <a class="nav-link" href="index.php">Home</a>
           </li>
 
           <li class="nav-item">
@@ -73,60 +86,113 @@ else
         
       </div>
     </div>
-</nav>
+  </nav>
 
 
-<section class="orders container my-5 py-3" id="orders">
-    <div class="container mt-2">
-        <h2 class="font-weight-bold text-center">Your Order</h2>
-        <hr class="mx-auto">
+  <section id="search" class="my-5 py-5 ms-2" style="float:left; width:30%;">
+    <div class="container mt-5 py-5">
+        <p>Search Product</p>
+        <hr>
+    </div>
+    <form action="#">
+        <div class="row mx-auto container">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+
+                <p>Category</p>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="category" id="category_one">
+                    <label for="flexRadioDefault1" class="form-check-label">
+                        Shoes
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="category" id="category_one">
+                    <label for="flexRadioDefault2" class="form-check-label">
+                        coats
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="category" id="category_one">
+                    <label for="flexRadioDefault3" class="form-check-label">
+                        watches
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="category" id="category_one">
+                    <label for="flexRadioDefault4" class="form-check-label">
+                        Bags
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mx-auto container mt-5" >
+            <div class="col-lg-12 col-md-12 col-sm-12">
+
+                <p>Price</p>
+                <input type="range" class="form-range w-50" min="1" max="1000" id="customRange2">
+                <div class="w-50">
+                    <span style="float: left;">1</span>
+                    <span style="float: right;">1000</span>
+
+                </div>
+            </div>
+        </div>
+        <div class="form-group my-3 mx-3">
+            <input type="submit" name="search" value="Search" class="btn btn-primary">
+        </div>
+    </form>
+
+
+  </section>
+
+  <!--featured-->
+
+
+  <section id="featured" class="my-5 py-5">
+    <div class="container  mt-5 py-5">
+        <h3>Our Products</h3>
+        <hr>
+        <p>Here you can check out our featured products</p>
     </div>
     
-    <table class="mt-5 pt-5 mx-auto">
-        <tr>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Quantity</th>
+    <div class="row mx-auto container" style="width:70%;">
+    <?php while($row = $products->fetch_assoc()) {?>
+        <div onclick="window.location.href='single_product.php'" class="product text-center col-lg-3 col-md-4 col-sm-12">
+            <img class="img-fluid mb-3" src="assets/imgs/<?php echo $row['product_image2'] ?>"/>
+            <div class="star">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+           <h5 class="p-name"><?php echo $row['product_name'] ?></h5>
+           <h4 class="p-price"><?php echo $row['product_price'] ?></h4>
+           <a class="btn buy-btn" href="<?php echo "single_product.php?product_id=".$row['product_id']; ?>">Buy Now</a>
+        </div>
+    <?php } ?>
 
-            
 
-        </tr>
-        <?php while($row = $order_detail->fetch_assoc()) { ?>
-            <tr>
-                <td>
-                    <div class="product-info">
-                        <img src="assets/imgs/<?php echo $row['product_image'] ?>" >
-                        <div>
-                            <p class="mt-3"><?php echo $row['product_name'] ?></p>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <span>$ <?php echo $row['product_price'] ?></span>
-                </td>
-                <td>
-                    <span><?php echo $row['product_qunatity'] ?></span>
-                </td>
-              
-                
-            </tr>
-        <?php } ?>
-        
 
-    </table>
-
-    <?php
-if($order_status="Not Paid") {?>
-<form style="float:right;">
-<input type="submit" class="btn btn-primary" value="Pay Now">
-</form>
-<?php
-}
-?>
-
-    
+        <nav aria-label="Page navigation example">
+            <ul class="pagination mt-5">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+             </ul>
+            </nav>
+    </div>
 </section>
 
+
+
+
+
+<!--footer-->
 
   <footer class="mt-5 py-5">
     <div class="row container mx-auto pt-5">
@@ -195,6 +261,14 @@ if($order_status="Not Paid") {?>
 
 
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>  
+
+
+    
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>  
 </body>
 </html>

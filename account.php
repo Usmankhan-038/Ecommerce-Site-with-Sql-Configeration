@@ -195,9 +195,9 @@ else
         </td>
         <td>
         <form action="order_detail.php" method="POST">
-
-        <input type="hidden" value="<?php echo $row['order_id']; ?>">
-            <input type="submit" class="btn order-details-btn" value="Detail">
+            <input type="hidden" value="<?php echo $row['order_status'];?>" name="order_status">
+            <input type="hidden" value="<?php echo $row['order_id']; ?>" name="order_id">
+            <input type="submit" class="btn order-details-btn" value="Detail" name="order-details-btn">
         </form>
         </td>
 

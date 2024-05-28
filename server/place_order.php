@@ -9,7 +9,7 @@ if(isset($_POST['place_order']))
     $city=$_POST['city'];
     $address=$_POST['address'];
     $total=$_SESSION['total'];
-    $order_status ="on_hold";
+    $order_status ="Not Paid";
     $user_id=$_SESSION['user_id'];
     $order_date=date("Y-m-d H:i:s");
     $stmt = $conn->prepare("INSERT INTO orders (order_cost,order_status,user_id,user_phone,user_city,user_address,order_date) 
