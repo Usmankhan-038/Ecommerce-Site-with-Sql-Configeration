@@ -38,30 +38,49 @@ if(isset($_POST['search'])) {
             color: #fff;
             background-color: coral;
         }
+        .navbar-nav .nav-link {
+            color: black;
+        }
+        .navbar-nav .nav-link:hover {
+            color: gray;
+        }
     </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg bg-white py-3 fixed-top">
-    <div class="container">
-        <img class="logo" src="assets/imgs/logo.jpg"/>
-        <h2 class="brand">Orange</h2>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse nav-buttons" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="shop.php">Shop</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Blog</a></li>
-                <li class="nav-item"><a class="nav-link" href="contact.php">Contact Us</a></li>
-                <li class="nav-item">
-                    <a href="cart.php"><i class="fa fa-shopping-cart"></i></a>
-                    <a href="account.php"><i class="fa fa-user"></i></a>
-                </li>
-            </ul>
+        <div class="container">
+            <a class="navbar-brand" href="index.php">
+                <img class="logo" src="assets/imgs/logo.jpg" alt="Logo"/>
+                <h2 class="brand d-inline-block">Orange</h2>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="shop.php">Shop</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.php">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.php"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="account.php"><i class="fa fa-user" aria-hidden="true"></i></a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
+
 
 <div class="container my-5 py-5">
     <div class="row">
