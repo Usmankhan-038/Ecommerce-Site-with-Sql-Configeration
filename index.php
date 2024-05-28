@@ -40,7 +40,7 @@
               </li>
 
               <li class="nav-item">
-              <a href="cart.html"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+              <a href="cart.php"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
               <a href="account.html"><i class="fa fa-user" aria-hidden="true"></i></a>
             </li>
 
@@ -381,6 +381,7 @@
                 </div>
             </div>
         </div>
+    </div>
 </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>  
 </body>

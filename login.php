@@ -1,3 +1,17 @@
+<?php
+session_start();
+
+include('server/connection.php');
+
+if(isset($_POST['login_btn']))
+{
+    $email=$_POST['email'];
+    $_password=$_POST['password'];
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,44 +66,32 @@
       </div>
     </div>
   </nav>
-
-      <!--Register-->
+      <!--login-->
       <section class="my-5 py-5">
         <div class="container text-center mt-3 pt-5">
-            <h2 class="form-weight-bold">Register</h2>
+            <h2 class="form-weight-bold">Login</h2>
             <hr class="mx-auto">
             </div>
             <div class="mx-auto container">
-                <form id="register-form">
-                <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" class="form-control" id="register-name" name="email" placeholder="Name"requiured/>
-                
-                </div>
-                
+                <form id="login-form" method="POST" action="login.php">
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="text" class="form-control" id="register-email" name="email" placeholder="Email"requiured/>
+                        <input type="text" class="form-control" id="login-email" name="email" placeholder="Email"requiured/>
                     
                     </div>
 
                     <div class="form-group">
                         <label>Password</label>
-                        <input type="password" class="form-control" id="register-password" name="password" placeholder="Password"required/>
-                    
-                    </div>
-                    <div class="form-group">
-                        <label>Confirm Password</label>
-                        <input type="password" class="form-control" id="register-confirm password" name="confirm password" placeholder="Confirm Password"required/>
+                        <input type="password" class="form-control" id="login-password" name="password" placeholder="Password"required/>
                     
                     </div>
                     <div class="form-group">
                        
-                        <input type="submit" class="btn" id="register-btn" value="Register" />
+                        <input type="submit" class="btn" id="login-btn" value="login_btn" name="login" />
                     
                     </div>
                     <div class="form-group">
-                        <a id="login-url" class="btn">Do you have a account? Login</a>
+                        <a id="register-url" class="btn">Don't have a account? Register</a>
                     
                     </div>
 

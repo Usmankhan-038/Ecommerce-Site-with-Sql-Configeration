@@ -29,8 +29,9 @@ if(isset($_POST['place_order']))
         $stmt->bind_param("iissisii",$order_id,$product_id,$product_name,$product_image,$user_id,$order_date,$product_price,$product_quantity);
         $stmt->execute();
     }
+    //unset($_SESSION['cart']);
     
-   // header('location:order_success.php');
+    header('location:../payment.php?order_status=Order placed successfully');
 }
 else
 {

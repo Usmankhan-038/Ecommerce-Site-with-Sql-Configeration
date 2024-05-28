@@ -67,7 +67,7 @@ else if(isset($_POST['edit']))
 }
 else
 {
-    header('location:index.php');
+ //   header('location:index.php');
 }
 
 
@@ -130,7 +130,7 @@ calculateTotalCart();
           </li>
 
           <li class="nav-item">
-          <a href="cart.html"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+          <a href="cart.php"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
           <a href="account.html"><i class="fa fa-user" aria-hidden="true"></i></a>
         </li>
 
