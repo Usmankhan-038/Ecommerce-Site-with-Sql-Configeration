@@ -9,6 +9,7 @@ if(isset($_POST['order-details-btn']) && isset($_POST['order_id']))
     $stmt->bind_param('i',$order_id);
     $stmt->execute();
     $order_detail=$stmt->get_result();
+    $order_total_price=calculateTotalOrderPrice($order_detail);
    
    
 }
@@ -18,6 +19,16 @@ else
    //header('location:account.php');
 }
 
+function calculateTotalOrderPrice($order_detail)
+{
+    $total=0;
+    foreach($order_details as $value)
+    {
+        $total=$total+($value['product_quantity']*$value['product_price']);
+    }
+    
+    return $total;
+}
 
 ?>
 
@@ -65,8 +76,10 @@ else
 
     <?php
 if($order_status="Not Paid") {?>
-<form style="float:right;">
-<input type="submit" class="btn btn-primary" value="Pay Now">
+<form style="float:right;" method="POST" action="payment.php">
+<input type="hidden" name="order_total_price" value=<?php $order_total_price ?>>
+<input type="hidden" name="order_status" value=<?php echo $order_status; ?>>
+<input type="submit"name="order_pay_btn" class="btn btn-primary" value="Pay Now">
 </form>
 <?php
 }
