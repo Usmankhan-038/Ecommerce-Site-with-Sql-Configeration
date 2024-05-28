@@ -1,64 +1,24 @@
 <?php
-session_start();
 include('server/connection.php');
-if(isset($_POST['register']))
-{
-    $name=$_POST['name'];
-    $email=$_POST['email'];
-    $password=$_POST['password'];
-    $confirmPassword=$_POST['confirmPassword'];
-    if($password!=$confirmPassword)
-    {
-        header('location: register.php?error=password don\'t match');
 
-    }
-    else if(strlen($password)<6)
-    {
-        header('location: register.php?error=password must be at least 6 characters');
-    }
-    else
-    {
-        $stmt1=$conn->prepare("SELECT COUNT(*) From users WHERE user_email=?");
-        $stmt1->bind_param('s',$email);
-        $stmt1->execute();
-        $stmt1->bind_result($num_rows);
-        $stmt1->store_result();
-        $stmt1->fetch();
-        if($num_rows!=0)
-        {
-            header('location: register.php?error=User with this email is already exist');
-    
-        }
-        else
-        {
-            $stmt = $conn->prepare("INSERT INTO users (user_name,user_email,user_password) VALUES (?,?,?)");
-            $stmt->bind_param("sss",$name,$email,md5($password));
-            if($stmt->execute())
-            {
-                $user_id=$stmt->insert_id;
-                $_SESSION['user_id']=$user_id;
-                $_SESSION['user_email']=$email;
-                $_SESSION['user_name']=$name;
-                $_SESSION['logged_in']=true;
-                header('location: account.php?register_success=You Registered Successfully');
-            }
-            else
-            {
-                header('location: register.php?error=Registration Failed');
-            }
-            
-        }
-    }
-}
-else if($_SESSION['logged_in'])
+if(isset($_POST['order_detail_btn']) && isset($_POST['order_id']))
 {
-    header('location:account.php');
-    exit;
+    $order_id=$_POST['order_id'];
+    $stmt=$conn->prepare("SELECT * FROM order_items WHERE order_id=?");
+    $stmt->bind_param('i',$order_id);
+    $stmt->execute();
+    $order_detail=$stmt->get_result();
+   
+   
+}
+else
+{
+
+   //header('location:account.php');
 }
 
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -72,10 +32,9 @@ else if($_SESSION['logged_in'])
     <link rel="stylesheet"href="assets/css/style.css"/>
 </head>
 <body>
-
-   <!--Navbar-->
+<!--Navbar-->
     
-   <nav class="navbar navbar-expand-lg bg-white py-3 fixed-top">
+<nav class="navbar navbar-expand-lg bg-white py-3 fixed-top">
     <div class="container">
       <img class="logo" src="assets/imgs/logo.jpg"/>
       <h2 class="brand">Orange</h2>
@@ -86,7 +45,7 @@ else if($_SESSION['logged_in'])
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
          
           <li class="nav-item">
-            <a class="nav-link" href="index.php">Home</a>
+            <a class="nav-link" href="index.html">Home</a>
           </li>
 
           <li class="nav-item">
@@ -113,67 +72,58 @@ else if($_SESSION['logged_in'])
         
       </div>
     </div>
-  </nav>
+</nav>
 
-      <!--Register-->
-      <section class="my-5 py-5">
-        <div class="container text-center mt-3 pt-5">
-            <h2 class="form-weight-bold">Register</h2>
-            <hr class="mx-auto">
-            </div>
-            <div class="mx-auto container">
-                <form id="register-form" method="POST">
-                    <p style="color: red;"><?php if(isset($_GET['error'])){echo $_GET['error'];} ?></p>
-                <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" class="form-control" id="register-name" name="name" placeholder="Name"requiured/>
-                
-                </div>
-                
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="text" class="form-control" id="register-email" name="email" placeholder="Email"requiured/>
-                    
+
+<section class="orders container my-5 py-3" id="orders">
+    <div class="container mt-2">
+        <h2 class="font-weight-bold text-center">Your Order</h2>
+        <hr class="mx-auto">
+    </div>
+    
+    <table class="mt-5 pt-5">
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+
+            
+
+        </tr>
+        <?php while($row = $order_detail->fetch_assoc()) { ?>
+            <tr>
+                <td>
+                    <div class="product-info">
+                        <img src="assets/imgs/<?php echo $row['product_image'] ?>" >
+                        <div>
+                            <p class="mt-3"><?php echo $row['product_name'] ?></p>
+                        </div>
                     </div>
+                </td>
+                <td>
+                    <span><?php echo $row['product_price'] ?></span>
+                </td>
+                <td>
+                    <span><?php echo $row['product_quantity'] ?></span>
+                </td>
+                <td>
+                    <form action="order_detail.php" method="POST">
+                        <input type="submit" class="btn order-details-btn" value="Detail">
+                    </form>
+                </td>
+            </tr>
+        <?php } ?>
+        
 
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" class="form-control" id="register-password" name="password" placeholder="Password"required/>
-                    
-                    </div>
-                    <div class="form-group">
-                        <label>Confirm Password</label>
-                        <input type="password" class="form-control" id="register-confirm password" name="confirmPassword" placeholder="Confirm Password"required/>
-                    
-                    </div>
-                    <div class="form-group">
-                       
-                        <input type="submit" class="btn" name="register" id="register-btn" value="Register" />
-                    
-                    </div>
-                    <div class="form-group">
-                        <a id="login-url" class="btn" href="login.php">Do you have a account? Login</a>
-                    
-                    </div>
-
-                </form>
-            </div>
-      </section>
+    </table>
 
 
 
+    
+</section>
 
 
-
-
-
-
-
-
-
-
-      <!--footer-->
-<footer class="mt-5 py-5">
+  <footer class="mt-5 py-5">
     <div class="row container mx-auto pt-5">
         <div class="col-lg-3 col-md-6 col-sm-12">
             <img class="logo" src="assets/imgs/logo.jpg"/>
@@ -237,6 +187,12 @@ else if($_SESSION['logged_in'])
             </div>
         </div>
 </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>  
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>  
 </body>
 </html>

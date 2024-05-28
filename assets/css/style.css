@@ -552,16 +552,16 @@ margin: 5px auto;
 }
 
 .orders th{
-    text-align: left;
+   
     padding: 5px 10px;
     color: #fff;
     background-color:#fb774b;
-    text-align: left;
+    /* text-align: left; */
 
 }
 
 .orders th:nth-child(2){
-    text-align: right;
+    /* text-align: center; */
 }
 
 .orders td{
@@ -575,7 +575,12 @@ margin: 5px auto;
     margin-right:10px ;
 }
 
-
+.orders .order-details-btn
+{
+    color:white;
+    background-color: #fb774b;
+    border:3px solid #fb774b;
+}
 /*  checkout */
 #checkout-form .checkout-small-element{
     display:inline-block;
