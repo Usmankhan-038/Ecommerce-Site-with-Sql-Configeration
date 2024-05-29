@@ -24,7 +24,7 @@ if(isset($_POST['order_pay_btn']))
         <div class="mx-auto container text-center">
             <?php if(isset($_SESSION['total'])) {?>
             <p>Total Payment: $ <?php echo $_SESSION['total'];?></p> <?php } ?>
-            <?php if(isset($_POST['order_status']) && $_POST['order_status']== "Not Paid" && $_SESSION['total'] != 0) { ?>
+            <?php if(isset($_POST['order_status']) && $_POST['order_status']== "Not Paid" && $_SESSION['total'] !== 0) { ?>
             <input class="btn btn-primary" type="submit" value="Pay Now"/>   <?php } else { ?>
                 <p>You don't have an order</p> 
                 <?php } ?>
