@@ -2,7 +2,7 @@ Create database php_project;
 
 use php_project;
 
-
+Select * from product;
 CREATE TABLE IF NOT EXISTS products (
     product_id INT(11) NOT NULL AUTO_INCREMENT,
     product_name VARCHAR(100) NOT NULL,
