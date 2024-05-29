@@ -1,6 +1,6 @@
 <?php
 include('server/connection.php');
-
+session_start();
 if(isset($_POST['order-details-btn']) && isset($_POST['order_id']))
 {
     $order_id=$_POST['order_id'];
@@ -10,7 +10,7 @@ if(isset($_POST['order-details-btn']) && isset($_POST['order_id']))
     $stmt->execute();
     $order_detail=$stmt->get_result();
     $order_total_price=calculateTotalOrderPrice($order_detail);
-   
+   $SESSION['order_id']=$order_id;
    
 }
 else
@@ -77,6 +77,7 @@ function calculateTotalOrderPrice($order_detail)
     <?php
 if($order_status=="Not Paid") {?>
 <form style="float:right;" method="POST" action="payment.php">
+<input type="hidden" name="order_id" value="<?php echo $_POST['order_id'] ?>">
 <input type="hidden" name="order_total_price" value=<?php $order_total_price ?>>
 <input type="hidden" name="order_status" value=<?php echo $order_status; ?>>
 <input type="submit"name="order_pay_btn" class="btn btn-primary" value="Pay Now">
