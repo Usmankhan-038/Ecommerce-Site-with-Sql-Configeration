@@ -28,6 +28,7 @@ else
         $stmt->bind_param("isiisss",$total,$order_status, $user_id,$phone,$city,$address,$order_date);
         $stmt->execute();
         $order_id=$stmt->insert_id;
+        $_SESSION['order_id']=$order_id;
         foreach($_SESSION['cart'] as $key => $value)
         {
             $product=$_SESSION['cart'][$key];
@@ -47,7 +48,8 @@ else
             }
         }
        //unset($_SESSION['cart']);
-    
+       
+
         header('location:../payment.php?order_status=Order placed successfully');
     }
 

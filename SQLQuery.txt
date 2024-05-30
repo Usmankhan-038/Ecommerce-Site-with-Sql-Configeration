@@ -79,3 +79,16 @@ SET SQL_SAFE_UPDATES = 0;
 UPDATE orders SET order_status = 'delivered' WHERE order_id = 9;
 
 SET SQL_SAFE_UPDATES = 1; -- Optionally re-enable safe update mode
+
+
+
+CREATE TABLE IF NOT EXISTS payments (
+    payment_id INT(11) NOT NULL AUTO_INCREMENT,
+    order_id INT(11) NOT NULL,
+    user_id INT(11) NOT NULL,
+    total_amount INT(11) NOT NULL,
+    order_status VARCHAR(50),
+    PRIMARY KEY (payment_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (order_id) REFERENCES orders(order_id)
+);
