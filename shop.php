@@ -1,20 +1,62 @@
 <?php
 include('server/connection.php');
 
-if(isset($_POST['search'])) {
-    $category=$_POST['category'];
-    $price=$_POST['price'];
-    $stmt = $conn->prepare("SELECT * FROM products where product_category=? and product_price<=? ");
-    $stmt->bind_param("si",$category,$price);
-    $stmt->execute();
-    $products=$stmt->get_result();
-} else {
-    $stmt = $conn->prepare("SELECT * FROM products");
-    $stmt->execute();
-    $products=$stmt->get_result();
-}
-?>
+$products = [];
+$total_records = 0;
+$selected_category = "all";  // Default value for category
+$selected_price = 100;  // Default value for price
 
+if (isset($_POST['search'])) {
+    $selected_category = $_POST['category'];
+    $selected_price = $_POST['price'];
+    $page_no = 1; // Reset to page 1 for new search
+} else {
+    if (isset($_GET['page_no']) && $_GET['page_no'] != "") {
+        $page_no = $_GET['page_no'];
+    } else {
+        $page_no = 1;
+    }
+
+    if (isset($_GET['category'])) {
+        $selected_category = $_GET['category'];
+    }
+
+    if (isset($_GET['price'])) {
+        $selected_price = $_GET['price'];
+    }
+}
+
+if ($selected_category !== "all" && $selected_price) {
+    $stmt = $conn->prepare("SELECT COUNT(*) AS total_records FROM products WHERE product_category = ? AND product_price <= ?");
+    $stmt->bind_param("si", $selected_category, $selected_price);
+} elseif ($selected_price) {
+    $stmt = $conn->prepare("SELECT COUNT(*) AS total_records FROM products WHERE product_price <= ?");
+    $stmt->bind_param("i", $selected_price);
+} else {
+    $stmt = $conn->prepare("SELECT COUNT(*) AS total_records FROM products");
+}
+$stmt->execute();
+$stmt->bind_result($total_records);
+$stmt->store_result();
+$stmt->fetch();
+
+$total_records_per_page = 8;
+$offset = ($page_no - 1) * $total_records_per_page;
+$total_no_of_pages = ceil($total_records / $total_records_per_page);
+
+if ($selected_category !== "all" && $selected_price) {
+    $stmt2 = $conn->prepare("SELECT * FROM products WHERE product_category = ? AND product_price <= ? LIMIT ?, ?");
+    $stmt2->bind_param("siii", $selected_category, $selected_price, $offset, $total_records_per_page);
+} elseif ($selected_price) {
+    $stmt2 = $conn->prepare("SELECT * FROM products WHERE product_price <= ? LIMIT ?, ?");
+    $stmt2->bind_param("iii", $selected_price, $offset, $total_records_per_page);
+} else {
+    $stmt2 = $conn->prepare("SELECT * FROM products LIMIT ?, ?");
+    $stmt2->bind_param("ii", $offset, $total_records_per_page);
+}
+$stmt2->execute();
+$products = $stmt2->get_result();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,39 +90,38 @@ if(isset($_POST['search'])) {
 </head>
 <body>
 <nav class="navbar navbar-expand-lg bg-white py-3 fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="index.php">
-                <img class="logo" src="assets/imgs/logo.jpg" alt="Logo"/>
-                <h2 class="brand d-inline-block">Orange</h2>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="shop.php">Shop</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.php">Contact Us</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cart.php"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="account.php"><i class="fa fa-user" aria-hidden="true"></i></a>
-                    </li>
-                </ul>
-            </div>
+    <div class="container">
+        <a class="navbar-brand" href="index.php">
+            <img class="logo" src="assets/imgs/logo.jpg" alt="Logo"/>
+            <h2 class="brand d-inline-block">Orange</h2>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="shop.php">Shop</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="contact.php">Contact Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cart.php"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="account.php"><i class="fa fa-user" aria-hidden="true"></i></a>
+                </li>
+            </ul>
         </div>
-    </nav>
-
+    </div>
+</nav>
 
 <div class="container my-5 py-5">
     <div class="row">
@@ -96,20 +137,24 @@ if(isset($_POST['search'])) {
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <p>Category</p>
                             <div class="form-check">
-                                <input type="radio" class="form-check-input" value="shoes" name="category" id="category_one">
-                                <label for="flexRadioDefault1" class="form-check-label">shoes</label>
+                                <input type="radio" class="form-check-input" value="all" name="category" id="category_all" <?php if($selected_category == 'all') echo 'checked'; ?>>
+                                <label for="category_all" class="form-check-label">All</label>
                             </div>
                             <div class="form-check">
-                                <input type="radio" class="form-check-input" value="coats" name="category" id="category_one">
-                                <label for="flexRadioDefault2" class="form-check-label">coats</label>
+                                <input type="radio" class="form-check-input" value="shoes" name="category" id="category_one" <?php if($selected_category == 'shoes') echo 'checked'; ?>>
+                                <label for="category_one" class="form-check-label">Shoes</label>
                             </div>
                             <div class="form-check">
-                                <input type="radio" class="form-check-input" value="watches" name="category" id="category_one">
-                                <label for="flexRadioDefault2" class="form-check-label">watches</label>
+                                <input type="radio" class="form-check-input" value="coats" name="category" id="category_two" <?php if($selected_category == 'coats') echo 'checked'; ?>>
+                                <label for="category_two" class="form-check-label">Coats</label>
                             </div>
                             <div class="form-check">
-                                <input type="radio" class="form-check-input" value="bags" name="category" id="category_one">
-                                <label for="flexRadioDefault2" class="form-check-label">bags</label>
+                                <input type="radio" class="form-check-input" value="watches" name="category" id="category_three" <?php if($selected_category == 'watches') echo 'checked'; ?>>
+                                <label for="category_three" class="form-check-label">Watches</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" value="bags" name="category" id="category_four" <?php if($selected_category == 'bags') echo 'checked'; ?>>
+                                <label for="category_four" class="form-check-label">Bags</label>
                             </div>
                         </div>
                     </div>
@@ -117,7 +162,7 @@ if(isset($_POST['search'])) {
                     <div class="row mx-auto container mt-5">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <p>Price</p>
-                            <input type="range" class="form-range w-100" min="1" max="1000" id="customRange2" name="price" value="100">
+                            <input type="range" class="form-range w-100" min="1" max="1000" id="customRange2" name="price" value="<?php echo $selected_price; ?>">
                             <div class="d-flex justify-content-between">
                                 <span>1</span>
                                 <span>1000</span>
@@ -142,7 +187,7 @@ if(isset($_POST['search'])) {
                 <div class="row mx-auto container">
                     <?php while($row = $products->fetch_assoc()) { ?>
                         <div class="product text-center col-lg-3 col-md-4 col-sm-12">
-                            <img class="img-fluid mb-3" src="assets/imgs/<?php echo $row['product_image2'] ?>"/>
+                            <img class="img-fluid mb-3" src="assets/imgs/<?php echo htmlspecialchars($row['product_image2']); ?>"/>
                             <div class="star">
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
@@ -150,20 +195,26 @@ if(isset($_POST['search'])) {
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                             </div>
-                            <h5 class="p-name"><?php echo $row['product_name'] ?></h5>
-                            <h4 class="p-price"><?php echo $row['product_price'] ?></h4>
-                            <a class="btn buy-btn" href="<?php echo "single_product.php?product_id=".$row['product_id']; ?>">Buy Now</a>
+                            <h5 class="p-name"><?php echo htmlspecialchars($row['product_name']); ?></h5>
+                            <h4 class="p-price"><?php echo htmlspecialchars($row['product_price']); ?></h4>
+                            <a class="btn buy-btn" href="<?php echo "single_product.php?product_id=" . htmlspecialchars($row['product_id']); ?>">Buy Now</a>
                         </div>
                     <?php } ?>
                 </div>
 
                 <nav aria-label="Page navigation example">
-                    <ul class="pagination mt-5">
-                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    <ul class="pagination mt-5 mx-auto">
+                        <li class="page-item <?php if($page_no <= 1){ echo 'disabled';}?>">
+                            <a class="page-link" href="<?php if($page_no > 1){ echo '?page_no='.($page_no-1).'&category='.$selected_category.'&price='.$selected_price;} else { echo '#'; } ?>">Previous</a>
+                        </li>
+                        <?php for ($i = 1; $i <= $total_no_of_pages; $i++) { ?>
+                            <li class="page-item <?php if($page_no == $i){ echo 'active';}?>">
+                                <a class="page-link" href="?page_no=<?php echo $i; ?>&category=<?php echo $selected_category; ?>&price=<?php echo $selected_price; ?>"><?php echo $i; ?></a>
+                            </li>
+                        <?php } ?>
+                        <li class="page-item <?php if($page_no >= $total_no_of_pages){ echo 'disabled';}?>">
+                            <a class="page-link" href="<?php if($page_no < $total_no_of_pages){ echo '?page_no='.($page_no+1).'&category='.$selected_category.'&price='.$selected_price;} else { echo '#'; } ?>">Next</a>
+                        </li>
                     </ul>
                 </nav>
             </section>
@@ -171,6 +222,6 @@ if(isset($_POST['search'])) {
     </div>
 </div>
 
-<?php include('layout/footer.php')?>
+<?php include('layout/footer.php'); ?>
 </body>
 </html>
