@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,6 +23,16 @@
         .navbar-nav .nav-link:hover {
             color: gray;
         }
+        .cart_quantity
+{
+    background-color: #fb774b;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 50%;
+    margin: -2px;
+    
+    font-size: 12px;
+}
     </style>
 </head>
 <body>
@@ -44,7 +62,8 @@
                         <a class="nav-link" href="contact.php">Contact Us</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="cart.php"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+                        <a class="nav-link" href="cart.php"><i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                        <span class="cart_quantity"><?php if(isset($_SESSION['quantity']) && $_SESSION['quantity']!=0){echo $_SESSION['quantity'];}?></span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="account.php"><i class="fa fa-user" aria-hidden="true"></i></a>
