@@ -1,0 +1,47 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f8f9fa;
+    padding: 10px;
+}
+
+aside {
+    width: 200px;
+    background-color: #f8f9fa;
+    height: 100vh;
+    position: fixed;
+    padding: 10px;
+}
+
+aside ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.side_bar_menu {
+    text-decoration: none;
+    color: #fb774b;
+    font-weight: bold;
+    display: block;
+    margin: 10px 10px;
+    padding:8px 10px ;
+}
+.side_bar_menu:hover {
+    color: #f8f9fa;
+    background-color: #fb774b;
+}
+
+
+
+main {
+    margin-left: 210px;
+    padding: 10px;
+}
+
+table {
+    width: 100%;
+}
