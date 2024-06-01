@@ -15,6 +15,7 @@ if (isset($_POST['add_to_cart'])) {
                 'product_quantity' => $_POST['product_quantity']
             );
             $_SESSION['cart'][$count] = $product_array;
+            $_SESSION['update_stock']=$_POST['product_quantity'];
         } else {
             echo '<script>alert("Product is already added to cart")</script>';
         }
@@ -26,6 +27,7 @@ if (isset($_POST['add_to_cart'])) {
             'product_image' => $_POST['product_image'],
             'product_quantity' => $_POST['product_quantity']
         );
+        $_SESSION['update_stock']=$_POST['product_quantity'];
         $_SESSION['cart'][0] = $product_array;
     }
 } else if (isset($_POST['remove_product'])) {
@@ -38,6 +40,7 @@ if (isset($_POST['add_to_cart'])) {
 } else if (isset($_POST['edit'])) {
     foreach ($_SESSION['cart'] as $key => $value) {
         if ($value['product_id'] == $_POST['product_id']) {
+        $_SESSION['update_stock']=$_POST['product_quantity'];
             $_SESSION['cart'][$key]['product_quantity'] = $_POST['product_quantity'];
         }
     }

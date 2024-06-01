@@ -97,6 +97,21 @@ $stmt->close();
         .dashboard-section p {
             font-size: 1.2rem;
         }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #fb774b;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+        .btn:hover {
+            background-color: #fff;
+            color: #fb774b;
+            transition: 0.2s;
+        }
         /* Responsive adjustments */
         @media (max-width: 1024px) {
             .dashboard-section {

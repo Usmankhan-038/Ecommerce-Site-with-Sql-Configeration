@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = $_POST['price'];
     $special_offer = $_POST['special_offer'];
     $color = $_POST['color'];
+    $stock = $_POST['stock'];
     
     // Assuming images are updated or retained as is if not provided
     $image = $_POST['image'] ?: $product['product_image'];
@@ -35,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Disable binary logging for this session
     $conn->query("SET SESSION sql_log_bin = 0");
 
-    $stmt = $conn->prepare("UPDATE products SET product_name = ?, product_category = ?, product_description = ?, product_image = ?, product_image2 = ?, product_image3 = ?, product_image4 = ?, product_price = ?, product_special_offer = ?, product_color = ? WHERE product_id = ?");
-    $stmt->bind_param("sssssssdsii", $name, $category, $description, $image, $image2, $image3, $image4, $price, $special_offer, $color, $product_id);
+    $stmt = $conn->prepare("UPDATE products SET product_name = ?, product_category = ?, product_description = ?, product_image = ?, product_image2 = ?, product_image3 = ?, product_image4 = ?, product_price = ?, product_special_offer = ?, product_color = ?, stock = ? WHERE product_id = ?");
+    $stmt->bind_param("sssssssdsiii", $name, $category, $description, $image, $image2, $image3, $image4, $price, $special_offer, $color, $stock, $product_id);
     if ($stmt->execute()) {
         header('Location: product.php');
         exit();
@@ -81,6 +82,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: #fff;
             color: #fb774b;
             border: 1px solid #fb774b;
+            transition: 0.2s;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #fb774b;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+        .btn:hover {
+            background-color: #fff;
+            color: #fb774b;
             transition: 0.2s;
         }
     </style>
@@ -136,6 +152,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 <label for="color">Color:</label>
                 <input type="text" id="color" name="color" value="<?php echo htmlspecialchars($product['product_color']); ?>" required>
+
+                <label for="stock">Stock:</label>
+                <input type="number" id="stock" name="stock" value="<?php echo htmlspecialchars($product['stock']); ?>" required>
                 
                 <button type="submit">Update Product</button>
             </form>

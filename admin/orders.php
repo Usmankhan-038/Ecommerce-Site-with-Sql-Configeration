@@ -95,13 +95,28 @@ $orders = $stmt2->get_result();
             color: #ccc;
             pointer-events: none;
         }
+        .btn1 {
+            display: inline-block;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #fb774b;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+        .btn1:hover {
+            background-color: #fff;
+            color: #fb774b;
+            transition: 0.2s;
+        }
     </style>
 </head>
 <body>
     <nav>
         <div>RGB SPOT</div>
         <a href="logout.php?logout=1" class="logout">
-            <input type="submit" class="sign_out btn" value="Sign out" name="sign_out">
+            <input type="submit" class="sign_out btn1" value="Sign out" name="sign_out">
         </a>
     </nav>
     <aside>

@@ -42,7 +42,8 @@ session_start();
         <div class="container">
             <a class="navbar-brand" href="index.php">
                 <img class="logo" src="assets/imgs/logo.jpg" alt="Logo"/>
-                <h2 class="brand d-inline-block">Orange</h2>
+                <h2 style="display:inline; color:#fb774b">RGB</h2>
+                <h2 class="brand d-inline-block" style="display:inline">SPOT</h2>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -56,7 +57,7 @@ session_start();
                         <a class="nav-link" href="shop.php">Shop</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Blog</a>
+                        <a class="nav-link" href="about.php">About Us</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="contact.php">Contact Us</a>

@@ -38,12 +38,14 @@ $result = $conn->query($query);
             background-color: #f2f2f2;
         }
         .btn {
+            display: inline-block;
+            padding: 10px 20px;
             color: #fff;
             background-color: #fb774b;
-            padding: 5px 10px;
-            margin: 5px;
+            border: none;
+            cursor: pointer;
             text-decoration: none;
-            display: inline-block;
+            text-align: center;
         }
         .btn:hover {
             background-color: #fff;

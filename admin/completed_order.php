@@ -40,12 +40,14 @@ $result = $conn->query($query);
             background-color: #f2f2f2;
         }
         .btn {
+            display: inline-block;
+            padding: 10px 20px;
             color: #fff;
             background-color: #fb774b;
-            padding: 5px 10px;
-            margin: 5px;
+            border: none;
+            cursor: pointer;
             text-decoration: none;
-            display: inline-block;
+            text-align: center;
         }
         .btn:hover {
             background-color: #fff;
@@ -89,7 +91,7 @@ $result = $conn->query($query);
                 <td><?php echo $row['order_date']; ?></td>
                 <td><?php echo $row['user_name']; ?></td>
                 <td><?php echo $row['product_name']; ?></td>
-                <td><?php echo $row['quantity']; ?></td>
+                <td><?php echo $row['product_quantity']; ?></td>
                 <td><?php echo $row['total_price']; ?></td>
                 <td>Completed</td>
             </tr>

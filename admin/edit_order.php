@@ -74,6 +74,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: 1px solid #fb774b;
             transition: 0.2s;
         }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #fb774b;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+        .btn:hover {
+            background-color: #fff;
+            color: #fb774b;
+            transition: 0.2s;
+        }
     </style>
 </head>
 <body>
