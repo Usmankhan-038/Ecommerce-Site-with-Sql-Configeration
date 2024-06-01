@@ -9,7 +9,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
-    $category = $_POST['category'];
+    $category_id = $_POST['category_id'];
     $description = $_POST['description'];
     $image = $_POST['image'];
     $image2 = $_POST['image2'];
@@ -18,9 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = $_POST['price'];
     $special_offer = $_POST['special_offer'];
     $color = $_POST['color'];
+    $stock = $_POST['stock'];
 
-    $stmt = $conn->prepare("INSERT INTO products (product_name, product_category, product_description, product_image, product_image2, product_image3, product_image4, product_price, product_special_offer, product_color) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssssdis", $name, $category, $description, $image, $image2, $image3, $image4, $price, $special_offer, $color);
+    $stmt = $conn->prepare("INSERT INTO products (product_name, product_category, product_description, product_image, product_image2, product_image3, product_image4, product_price, product_special_offer, product_color,stock) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sisssssissi", $name, $category_id, $description, $image, $image2, $image3, $image4, $price, $special_offer, $color, $stock);
     if ($stmt->execute()) {
         header('Location: product.php');
         exit();
@@ -29,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -81,20 +83,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <li><a href="dashboard.php" class="side_bar_menu">Dashboard</a></li>
             <li><a href="orders.php" class="side_bar_menu">Orders</a></li>
             <li><a href="product.php" class="side_bar_menu">Products</a></li>
-            <li><a href="add_new_product.php" class="side_bar_menu">Add new Products</a></li>
-            <li><a href="account.php" class="side_bar_menu">Account</a></li>
-            <li><a href="help.php" class="side_bar_menu">Help</a></li>
+            <li><a href="add_new_product.php" class="side_bar_menu">Add Products</a></li>
+            <li><a href="admin_account.php" class="side_bar_menu">Account</a></li>
         </ul>
     </aside>
     <main>
         <h1 class="header Text">Add New Product</h1>
         <div class="form-container">
-            <form method="POST" action="">
+            <form method="POST" action="add_new_product.php">
                 <label for="name">Product Name:</label>
                 <input type="text" id="name" name="name" required>
                 
-                <label for="category">Category:</label>
-                <input type="text" id="category" name="category" required>
+                <label for="category_id">Category:</label>
+                <select id="category_id" name="category_id" required>
+                    <option value="1">Shoes</option>
+                    <option value="2">Coats</option>
+                    <option value="3">Watches</option>
+                    <option value="4">Bags</option>
+                    <option value="5">Jeans</option>
+                    <!-- Add other categories as needed -->
+                </select>
                 
                 <label for="description">Description:</label>
                 <textarea id="description" name="description" required></textarea>
@@ -119,6 +127,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 <label for="color">Color:</label>
                 <input type="text" id="color" name="color" required>
+
+                <label for="stock">Stock:</label>
+                <input type="number" id="stock" name="stock" required>
                 
                 <button type="submit">Add Product</button>
             </form>

@@ -7,11 +7,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-// Initialize selected category and price if they are set
-$selected_category = isset($_GET['category']) ? $_GET['category'] : '';
-$selected_price = isset($_GET['price']) ? $_GET['price'] : '';
-
-// Get current page number
+// Fetch current page number
 $page_no = isset($_GET['page_no']) && $_GET['page_no'] != "" ? $_GET['page_no'] : 1;
 
 // Fetch total records
@@ -113,13 +109,23 @@ $orders = $stmt2->get_result();
             <li><a href="dashboard.php" class="side_bar_menu">Dashboard</a></li>
             <li><a href="orders.php" class="side_bar_menu">Orders</a></li>
             <li><a href="product.php" class="side_bar_menu">Products</a></li>
-            <li><a href="add_new_product.php" class="side_bar_menu">Add new Products</a></li>
-            <li><a href="account.php" class="side_bar_menu">Account</a></li>
-            <li><a href="help.php" class="side_bar_menu">Help</a></li>
+            <li><a href="add_new_product.php" class="side_bar_menu">Add Products</a></li>
+            <li><a href="admin_account.php" class="side_bar_menu">Account</a></li>
         </ul>
     </aside>
     <main>
         <h1 class="header Text">Order</h1>
+        
+        <!-- Display Session Messages -->
+        <?php if (isset($_SESSION['message'])): ?>
+            <div class="alert alert-info">
+                <?php
+                echo $_SESSION['message'];
+                unset($_SESSION['message']);
+                ?>
+            </div>
+        <?php endif; ?>
+        
         <table>
             <tr>
                 <th>ID</th>
@@ -141,22 +147,21 @@ $orders = $stmt2->get_result();
                 <td><?php echo $row['user_address']; ?></td>
                 <td><a href="edit_order.php?id=<?php echo $row['order_id']; ?>" class="btn btn-blue">Edit</a></td>
                 <td><a href="delete_order.php?id=<?php echo $row['order_id']; ?>" class="btn">Delete</a></td>
-
             </tr>
             <?php } ?>
         </table>
         <nav aria-label="Page navigation example">
             <ul class="pagination mt-5 mx-auto">
                 <li class="page-item <?php if ($page_no <= 1) { echo 'disabled'; } ?>">
-                    <a class="page-link" href="<?php if ($page_no > 1) { echo '?page_no=' . ($page_no - 1) . '&category=' . $selected_category . '&price=' . $selected_price; } else { echo '#'; } ?>">Previous</a>
+                    <a class="page-link" href="<?php if ($page_no > 1) { echo '?page_no=' . ($page_no - 1); } else { echo '#'; } ?>">Previous</a>
                 </li>
                 <?php for ($i = 1; $i <= $total_no_of_pages; $i++) { ?>
                     <li class="page-item <?php if ($page_no == $i) { echo 'active'; } ?>">
-                        <a class="page-link" href="?page_no=<?php echo $i; ?>&category=<?php echo $selected_category; ?>&price=<?php echo $selected_price; ?>"><?php echo $i; ?></a>
+                        <a class="page-link" href="?page_no=<?php echo $i; ?>"><?php echo $i; ?></a>
                     </li>
                 <?php } ?>
                 <li class="page-item <?php if ($page_no >= $total_no_of_pages) { echo 'disabled'; } ?>">
-                    <a class="page-link" href="<?php if ($page_no < $total_no_of_pages) { echo '?page_no=' . ($page_no + 1) . '&category=' . $selected_category . '&price=' . $selected_price; } else { echo '#'; } ?>">Next</a>
+                    <a class="page-link" href="<?php if ($page_no < $total_no_of_pages) { echo '?page_no=' . ($page_no + 1); } else { echo '#'; } ?>">Next</a>
                 </li>
             </ul>
         </nav>

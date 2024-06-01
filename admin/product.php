@@ -113,9 +113,8 @@ $products = $stmt2->get_result();
             <li><a href="dashboard.php" class="side_bar_menu">Dashboard</a></li>
             <li><a href="orders.php" class="side_bar_menu">Orders</a></li>
             <li><a href="product.php" class="side_bar_menu">Products</a></li>
-            <li><a href="add_new_product.php" class="side_bar_menu">Add new Products</a></li>
-            <li><a href="account.php" class="side_bar_menu">Account</a></li>
-            <li><a href="help.php" class="side_bar_menu">Help</a></li>
+            <li><a href="add_new_product.php" class="side_bar_menu">Add Products</a></li>
+            <li><a href="admin_account.php" class="side_bar_menu">Account</a></li>
         </ul>
     </aside>
     <main>
@@ -142,7 +141,7 @@ $products = $stmt2->get_result();
                 <td><?php echo $row['product_category']; ?></td>
                 <td><?php echo $row['product_color']; ?></td>
                 <td><a href="edit_product.php?id=<?php echo $row['product_id']; ?>" class="btn btn-blue">Edit</a></td>
-                <td><a href="delete_order.php?id=<?php echo $row['product_id']; ?>" class="btn">Delete</a></td>
+                <td><a href="delete_product.php?id=<?php echo $row['product_id']; ?>" class="btn">Delete</a></td>
             </tr>
             <?php } ?>
         </table>

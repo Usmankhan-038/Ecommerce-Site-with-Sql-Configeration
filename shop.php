@@ -26,15 +26,31 @@ if (isset($_POST['search'])) {
     }
 }
 
-if ($selected_category !== "all" && $selected_price) {
-    $stmt = $conn->prepare("SELECT COUNT(*) AS total_records FROM products WHERE product_category = ? AND product_price <= ?");
-    $stmt->bind_param("si", $selected_category, $selected_price);
-} elseif ($selected_price) {
-    $stmt = $conn->prepare("SELECT COUNT(*) AS total_records FROM products WHERE product_price <= ?");
-    $stmt->bind_param("i", $selected_price);
-} else {
-    $stmt = $conn->prepare("SELECT COUNT(*) AS total_records FROM products");
+$sql_count = "SELECT COUNT(*) AS total_records FROM products INNER JOIN categories ON products.product_category = categories.category_id";
+$sql_products = "SELECT products.*, categories.category_name FROM products INNER JOIN categories ON products.product_category = categories.category_id";
+$conditions = [];
+$params = [];
+$types = "";
+
+if ($selected_category !== "all") {
+    $conditions[] = "categories.category_name = ?";
+    $params[] = $selected_category;
+    $types .= "s";
 }
+
+if ($selected_price) {
+    $conditions[] = "products.product_price <= ?";
+    $params[] = $selected_price;
+    $types .= "i";
+}
+
+if (!empty($conditions)) {
+    $sql_count .= " WHERE " . implode(" AND ", $conditions);
+    $sql_products .= " WHERE " . implode(" AND ", $conditions);
+}
+
+$stmt = $conn->prepare($sql_count);
+$stmt->bind_param($types, ...$params);
 $stmt->execute();
 $stmt->bind_result($total_records);
 $stmt->store_result();
@@ -44,19 +60,17 @@ $total_records_per_page = 8;
 $offset = ($page_no - 1) * $total_records_per_page;
 $total_no_of_pages = ceil($total_records / $total_records_per_page);
 
-if ($selected_category !== "all" && $selected_price) {
-    $stmt2 = $conn->prepare("SELECT * FROM products WHERE product_category = ? AND product_price <= ? LIMIT ?, ?");
-    $stmt2->bind_param("siii", $selected_category, $selected_price, $offset, $total_records_per_page);
-} elseif ($selected_price) {
-    $stmt2 = $conn->prepare("SELECT * FROM products WHERE product_price <= ? LIMIT ?, ?");
-    $stmt2->bind_param("iii", $selected_price, $offset, $total_records_per_page);
-} else {
-    $stmt2 = $conn->prepare("SELECT * FROM products LIMIT ?, ?");
-    $stmt2->bind_param("ii", $offset, $total_records_per_page);
-}
+$sql_products .= " LIMIT ?, ?";
+$params[] = $offset;
+$params[] = $total_records_per_page;
+$types .= "ii";
+
+$stmt2 = $conn->prepare($sql_products);
+$stmt2->bind_param($types, ...$params);
 $stmt2->execute();
 $products = $stmt2->get_result();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -136,26 +150,21 @@ $products = $stmt2->get_result();
                     <div class="row mx-auto container">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <p>Category</p>
+                            <?php
+                            $category_stmt = $conn->prepare("SELECT * FROM categories");
+                            $category_stmt->execute();
+                            $categories = $category_stmt->get_result();
+                            ?>
                             <div class="form-check">
                                 <input type="radio" class="form-check-input" value="all" name="category" id="category_all" <?php if($selected_category == 'all') echo 'checked'; ?>>
                                 <label for="category_all" class="form-check-label">All</label>
                             </div>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" value="shoes" name="category" id="category_one" <?php if($selected_category == 'shoes') echo 'checked'; ?>>
-                                <label for="category_one" class="form-check-label">Shoes</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" value="coats" name="category" id="category_two" <?php if($selected_category == 'coats') echo 'checked'; ?>>
-                                <label for="category_two" class="form-check-label">Coats</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" value="watches" name="category" id="category_three" <?php if($selected_category == 'watches') echo 'checked'; ?>>
-                                <label for="category_three" class="form-check-label">Watches</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" value="bags" name="category" id="category_four" <?php if($selected_category == 'bags') echo 'checked'; ?>>
-                                <label for="category_four" class="form-check-label">Bags</label>
-                            </div>
+                            <?php while($category = $categories->fetch_assoc()) { ?>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" value="<?php echo htmlspecialchars($category['category_name']); ?>" name="category" id="category_<?php echo htmlspecialchars($category['category_name']); ?>" <?php if($selected_category == $category['category_name']) echo 'checked'; ?>>
+                                    <label for="category_<?php echo htmlspecialchars($category['category_name']); ?>" class="form-check-label"><?php echo htmlspecialchars($category['category_name']); ?></label>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
 

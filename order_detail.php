@@ -15,21 +15,18 @@ if (isset($_POST['order-details-btn']) && isset($_POST['order_id'])) {
     $_SESSION['order_id'] = $order_id;
     $_SESSION['total'] = $order_total_price;
     $_SESSION['order_status'] = $order_status;
-    $_SESSION['order_price']=$order_total_price;
+    $_SESSION['order_price'] = $order_total_price;
 
 } else {
     header('Location: account.php');
     exit();
 }
-function calculateTotalOrderPrice($order_detail)
-{
-    $total=0;
-    foreach($order_detail as $row)
-    {
-        $total=$total+($row['product_qunatity']*$row['product_price']);
+
+function calculateTotalOrderPrice($order_detail) {
+    $total = 0;
+    while ($row = $order_detail->fetch_assoc()) {
+        $total += $row['product_quantity'] * $row['product_price'];
     }
-    
-    
     return $total;
 }
 ?>
@@ -47,32 +44,29 @@ function calculateTotalOrderPrice($order_detail)
             <th>Product</th>
             <th>Price</th>
             <th>Quantity</th>
-
-            
-
         </tr>
-        <?php foreach($order_detail as $row) { ?>
+        <?php
+        // Reset the pointer and fetch the results again for display
+        $stmt->execute();
+        $order_detail = $stmt->get_result();
+        while ($row = $order_detail->fetch_assoc()) { ?>
             <tr>
                 <td>
                     <div class="product-info">
-                        <img src="assets/imgs/<?php echo $row['product_image'] ?>" >
+                        <img src="assets/imgs/<?php echo $row['product_image']; ?>" alt="<?php echo $row['product_name']; ?>">
                         <div>
-                            <p class="mt-3"><?php echo $row['product_name'] ?></p>
+                            <p class="mt-3"><?php echo $row['product_name']; ?></p>
                         </div>
                     </div>
                 </td>
                 <td>
-                    <span>$ <?php echo $row['product_price'] ?></span>
+                    <span>$ <?php echo $row['product_price']; ?></span>
                 </td>
                 <td>
-                    <span><?php echo $row['product_qunatity'] ?></span>
+                    <span><?php echo $row['product_quantity']; ?></span>
                 </td>
-              
-                
             </tr>
         <?php } ?>
-        
-
     </table>
     <?php if ($order_status == "Not Paid") { ?>
         <form style="float:right;" method="POST" action="payment.php">

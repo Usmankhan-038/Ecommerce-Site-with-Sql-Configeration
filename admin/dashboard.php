@@ -7,31 +7,63 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-// Initialize selected category and price if they are set
-$selected_category = isset($_GET['category']) ? $_GET['category'] : '';
-$selected_price = isset($_GET['price']) ? $_GET['price'] : '';
-
-// Get current page number
-$page_no = isset($_GET['page_no']) && $_GET['page_no'] != "" ? $_GET['page_no'] : 1;
-
-// Fetch total records
-$stmt = $conn->prepare("SELECT COUNT(*) AS total_records FROM orders");
+// Fetch total products
+$stmt = $conn->prepare("SELECT COUNT(*) AS total_products FROM products");
 $stmt->execute();
-$stmt->bind_result($total_records);
-$stmt->store_result();
+$stmt->bind_result($total_products);
 $stmt->fetch();
+$stmt->close();
 
-$total_records_per_page = 10;
-$offset = ($page_no - 1) * $total_records_per_page;
-$total_no_of_pages = ceil($total_records / $total_records_per_page);
+// Fetch total categories
+$stmt = $conn->prepare("SELECT COUNT(*) AS total_categories FROM categories");
+$stmt->execute();
+$stmt->bind_result($total_categories);
+$stmt->fetch();
+$stmt->close();
 
-// Fetch records for the current page
-$stmt2 = $conn->prepare("SELECT * FROM orders LIMIT ?, ?");
-$stmt2->bind_param("ii", $offset, $total_records_per_page);
-$stmt2->execute();
-$orders = $stmt2->get_result();
+// Fetch total orders
+$stmt = $conn->prepare("SELECT COUNT(*) AS total_orders FROM orders");
+$stmt->execute();
+$stmt->bind_result($total_orders);
+$stmt->fetch();
+$stmt->close();
+
+// Fetch completed orders (paid orders)
+$stmt = $conn->prepare("SELECT COUNT(*) AS completed_orders FROM orders WHERE order_status = 'paid'");
+$stmt->execute();
+$stmt->bind_result($completed_orders);
+$stmt->fetch();
+$stmt->close();
+
+// Fetch pending orders (not paid)
+$stmt = $conn->prepare("SELECT COUNT(*) AS pending_orders FROM orders WHERE order_status != 'paid'");
+$stmt->execute();
+$stmt->bind_result($pending_orders);
+$stmt->fetch();
+$stmt->close();
+
+// Fetch total stock from products
+$stmt = $conn->prepare("SELECT SUM(stock) AS total_stock FROM products");
+$stmt->execute();
+$stmt->bind_result($total_stock);
+$stmt->fetch();
+$stmt->close();
+
+// Fetch highest selling product
+$stmt = $conn->prepare("SELECT product_id, COUNT(*) AS total_sold FROM order_items GROUP BY product_id ORDER BY total_sold DESC LIMIT 1");
+$stmt->execute();
+$stmt->bind_result($highest_selling_product_id, $highest_selling_product_count);
+$stmt->fetch();
+$stmt->close();
+
+// Fetch product details for highest selling product
+$stmt = $conn->prepare("SELECT product_name FROM products WHERE product_id = ?");
+$stmt->bind_param("i", $highest_selling_product_id);
+$stmt->execute();
+$stmt->bind_result($highest_selling_product_name);
+$stmt->fetch();
+$stmt->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,64 +72,28 @@ $orders = $stmt2->get_result();
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
     <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        th, td {
-            text-align: left;
-            padding: 8px;
-            border: 1px solid #ddd;
-        }
-        th {
+        /* Your existing styles */
+        .dashboard-section {
+            display: inline-block;
+            width: 200px;
+            margin: 20px;
+            padding: 20px;
             background-color: #f2f2f2;
-        }
-        .btn {
-            color: #fff;
-            background-color: #fb774b;
-            padding: 5px 10px;
-            margin: 5px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn:hover {
-            background-color: #fff;
-            color: #fb774b;
-            transition: 0.2s;
-        }
-        .btn-blue {
-            background-color: #007bff;
-            border-color: #007bff;
-            padding: 5px 10px;
-            margin: 5px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-blue:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .pagination a {
-            color: #333;
-            padding: 8px 16px;
-            text-decoration: none;
-            border: 1px solid #ddd;
-            margin: 0 4px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
             transition: background-color 0.3s, color 0.3s;
         }
-        .pagination a.active, .pagination a:hover {
+        .dashboard-section:hover {
             background-color: #fb774b;
-            color: white;
-            border: 1px solid #fb774b;
+            color: #fff;
         }
-        .pagination a.disabled {
-            color: #ccc;
-            pointer-events: none;
+        .dashboard-section h2 {
+            font-size: 2rem;
+            margin: 0;
+        }
+        .dashboard-section p {
+            font-size: 1.2rem;
         }
     </style>
 </head>
@@ -113,52 +109,36 @@ $orders = $stmt2->get_result();
             <li><a href="dashboard.php" class="side_bar_menu">Dashboard</a></li>
             <li><a href="orders.php" class="side_bar_menu">Orders</a></li>
             <li><a href="product.php" class="side_bar_menu">Products</a></li>
-            <li><a href="add_new_product.php" class="side_bar_menu">Add new Products</a></li>
-            <li><a href="account.php" class="side_bar_menu">Account</a></li>
-            <li><a href="help.php" class="side_bar_menu">Help</a></li>
+            <li><a href="add_new_product.php" class="side_bar_menu">Add Products</a></li>
+            <li><a href="admin_account.php" class="side_bar_menu">Account</a></li>
         </ul>
     </aside>
     <main>
         <h1 class="header Text">Dashboard</h1>
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Order Status</th>
-                <th>User ID</th>
-                <th>Order Date</th>
-                <th>User Phone</th>
-                <th>User Address</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-            <?php while ($row = $orders->fetch_assoc()) { ?>
-            <tr>
-                <td><?php echo $row['order_id']; ?></td>
-                <td><?php echo $row['order_status']; ?></td>
-                <td><?php echo $row['user_id']; ?></td>
-                <td><?php echo $row['order_date']; ?></td>
-                <td><?php echo $row['user_phone']; ?></td>
-                <td><?php echo $row['user_address']; ?></td>
-                <td><a href="edit_order.php?id=<?php echo $row['order_id']; ?>" class="btn btn-blue">Edit</a></td>
-                <td><a href="delete_order.php?id=<?php echo $row['order_id']; ?>" class="btn">Delete</a></td>
-            </tr>
-            <?php } ?>
-        </table>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination mt-5 mx-auto">
-                <li class="page-item <?php if ($page_no <= 1) { echo 'disabled'; } ?>">
-                    <a class="page-link" href="<?php if ($page_no > 1) { echo '?page_no=' . ($page_no - 1) . '&category=' . $selected_category . '&price=' . $selected_price; } else { echo '#'; } ?>">Previous</a>
-                </li>
-                <?php for ($i = 1; $i <= $total_no_of_pages; $i++) { ?>
-                    <li class="page-item <?php if ($page_no == $i) { echo 'active'; } ?>">
-                        <a class="page-link" href="?page_no=<?php echo $i; ?>&category=<?php echo $selected_category; ?>&price=<?php echo $selected_price; ?>"><?php echo $i; ?></a>
-                    </li>
-                <?php } ?>
-                <li class="page-item <?php if ($page_no >= $total_no_of_pages) { echo 'disabled'; } ?>">
-                    <a class="page-link" href="<?php if ($page_no < $total_no_of_pages) { echo '?page_no=' . ($page_no + 1) . '&category=' . $selected_category . '&price=' . $selected_price; } else { echo '#'; } ?>">Next</a>
-                </li>
-            </ul>
-        </nav>
+        <div class="dashboard-section" onclick="window.location.href='product.php'">
+            <h2><?php echo $total_products; ?></h2>
+            <p>Products</p>
+        </div>
+        <div class="dashboard-section" onclick="window.location.href='total_category.php'">
+            <h2><?php echo $total_categories; ?></h2>
+            <p>Categories</p>
+        </div>
+        <div class="dashboard-section" onclick="window.location.href='pending_order.php?status=pending'">
+            <h2><?php echo $pending_orders; ?></h2>
+            <p>Pending Orders</p>
+        </div>
+        <div class="dashboard-section" onclick="window.location.href='completed_order.php?status=completed'">
+            <h2><?php echo $completed_orders; ?></h2>
+            <p>Completed Orders</p>
+        </div>
+        <div class="dashboard-section" onclick="window.location.href='total_stock.php'">
+            <h2><?php echo is_null($total_stock) ? '0' : $total_stock; ?></h2>
+            <p>Total Stock</p>
+        </div>
+        <div class="dashboard-section" onclick="window.location.href='highest_order.php?id=<?php echo $highest_selling_product_id; ?>'">
+            <h2><?php echo $highest_selling_product_name; ?></h2>
+            <p>Highest Selling Product</p>
+        </div>
     </main>
 </body>
 </html>

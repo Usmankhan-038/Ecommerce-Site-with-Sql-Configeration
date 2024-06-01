@@ -91,3 +91,12 @@ INSERT INTO categories (category_name) VALUES
 ('watches'),
 ('bags'),
 ('jean');
+
+
+
+INSERT INTO admin (admin_name, admin_email, admin_password) VALUES
+('usman', 'usman@gmail.com', 'usman'),
+('adil', 'adil@gmail.com', 'adil');
+
+ALTER TABLE order_items ADD COLUMN product_quantity INT(10);
+ALTER TABLE payments ADD COLUMN payment_date DATETIME NOT NULL;
