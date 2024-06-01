@@ -72,19 +72,21 @@ $stmt->close();
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
     <style>
-        /* Your existing styles */
         .dashboard-section {
             display: inline-block;
-            width: 200px;
+            width: calc(33% - 40px); /* Three boxes per row with margins */
             margin: 20px;
             padding: 20px;
             background-color: #f2f2f2;
             text-align: center;
             cursor: pointer;
             border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .dashboard-section:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
             background-color: #fb774b;
             color: #fff;
         }
@@ -94,6 +96,17 @@ $stmt->close();
         }
         .dashboard-section p {
             font-size: 1.2rem;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .dashboard-section {
+                width: calc(50% - 40px); /* Two boxes per row with margins */
+            }
+        }
+        @media (max-width: 768px) {
+            .dashboard-section {
+                width: calc(100% - 40px); /* One box per row with margins */
+            }
         }
     </style>
 </head>

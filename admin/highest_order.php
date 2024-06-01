@@ -79,9 +79,11 @@ $result = $conn->query($query);
                 <th>Product Name</th>
                 <th>Order Number</th>
             </tr>
-            <?php while ($row = $result->fetch_assoc()) { ?>
+            <?php 
+            $rank = 1; // Initialize rank before the loop
+            while ($row = $result->fetch_assoc()) { ?>
             <tr>
-                <td><?php $count=0; echo $count+1 ?></td>
+                <td><?php echo $rank++; ?></td> <!-- Increment rank here -->
                 <td><?php echo $row['product_id']; ?></td>
                 <td><?php echo $row['product_name']; ?></td>
                 <td><?php echo $row['order_count']; ?></td>
