@@ -7,29 +7,22 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-// Fetch order details
-$order_id = isset($_GET['id']) ? $_GET['id'] : '';
-$order = null;
-
-if ($order_id) {
-    $stmt = $conn->prepare("SELECT * FROM orders WHERE order_id = ?");
-    $stmt->bind_param("i", $order_id);
-    $stmt->execute();
-    $order = $stmt->get_result()->fetch_assoc();
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $order_cost = $_POST['order_cost'];
-    $order_status = $_POST['order_status'];
-    $user_id = $_POST['user_id'];
-    $user_phone = $_POST['user_phone'];
-    $user_city = $_POST['user_city'];
-    $user_address = $_POST['user_address'];
+    $name = $_POST['name'];
+    $category = $_POST['category'];
+    $description = $_POST['description'];
+    $image = $_POST['image'];
+    $image2 = $_POST['image2'];
+    $image3 = $_POST['image3'];
+    $image4 = $_POST['image4'];
+    $price = $_POST['price'];
+    $special_offer = $_POST['special_offer'];
+    $color = $_POST['color'];
 
-    $stmt = $conn->prepare("UPDATE orders SET order_cost = ?, order_status = ?, user_id = ?, user_phone = ?, user_city = ?, user_address = ? WHERE order_id = ?");
-    $stmt->bind_param("dsiissi", $order_cost, $order_status, $user_id, $user_phone, $user_city, $user_address, $order_id);
+    $stmt = $conn->prepare("INSERT INTO products (product_name, product_category, product_description, product_image, product_image2, product_image3, product_image4, product_price, product_special_offer, product_color) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssssdis", $name, $category, $description, $image, $image2, $image3, $image4, $price, $special_offer, $color);
     if ($stmt->execute()) {
-        header('Location: orders.php');
+        header('Location: product.php');
         exit();
     } else {
         echo "Error: " . $stmt->error;
@@ -41,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Order</title>
+    <title>Add New Product</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
     <style>
@@ -94,34 +87,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </ul>
     </aside>
     <main>
-        <h1 class="header Text">Edit Order</h1>
-        <?php if ($order) { ?>
+        <h1 class="header Text">Add New Product</h1>
         <div class="form-container">
             <form method="POST" action="">
-                <label for="order_cost">Order Cost:</label>
-                <input type="number" id="order_cost" name="order_cost" step="0.01" value="<?php echo htmlspecialchars($order['order_cost']); ?>" required>
+                <label for="name">Product Name:</label>
+                <input type="text" id="name" name="name" required>
                 
-                <label for="order_status">Order Status:</label>
-                <input type="text" id="order_status" name="order_status" value="<?php echo htmlspecialchars($order['order_status']); ?>" required>
+                <label for="category">Category:</label>
+                <input type="text" id="category" name="category" required>
                 
-                <label for="user_id">User ID:</label>
-                <input type="number" id="user_id" name="user_id" value="<?php echo htmlspecialchars($order['user_id']); ?>" required>
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required></textarea>
                 
-                <label for="user_phone">User Phone:</label>
-                <input type="number" id="user_phone" name="user_phone" value="<?php echo htmlspecialchars($order['user_phone']); ?>" required>
+                <label for="image">Image 1 URL:</label>
+                <input type="text" id="image" name="image" required>
                 
-                <label for="user_city">User City:</label>
-                <input type="text" id="user_city" name="user_city" value="<?php echo htmlspecialchars($order['user_city']); ?>" required>
+                <label for="image2">Image 2 URL:</label>
+                <input type="text" id="image2" name="image2">
                 
-                <label for="user_address">User Address:</label>
-                <textarea id="user_address" name="user_address" required><?php echo htmlspecialchars($order['user_address']); ?></textarea>
+                <label for="image3">Image 3 URL:</label>
+                <input type="text" id="image3" name="image3">
                 
-                <button type="submit">Update Order</button>
+                <label for="image4">Image 4 URL:</label>
+                <input type="text" id="image4" name="image4">
+                
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" step="0.01" required>
+                
+                <label for="special_offer">Special Offer:</label>
+                <input type="number" id="special_offer" name="special_offer" required>
+                
+                <label for="color">Color:</label>
+                <input type="text" id="color" name="color" required>
+                
+                <button type="submit">Add Product</button>
             </form>
         </div>
-        <?php } else { ?>
-        <p>Order not found.</p>
-        <?php } ?>
     </main>
 </body>
 </html>
