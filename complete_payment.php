@@ -25,16 +25,5 @@ else
     exit;
 }
 
-// $order_status = "Paid";
-// $order_total_price = $_SESSION['total'];
-// $order_id=$_POST['order_id'];
-// $stmt = $conn->prepare("UPDATE orders SET order_status=? WHERE order_id=?");
-// $stmt->bind_param("si", $order_status, $order_id);
-// $stmt->execute();
-// $_SESSION['order_status'] = $order_status;
-// header('location:complete_payment.php?order_status=Order Paid Successfully,order_id='.$order_id);
-// exit();
-// }
-
 
 ?>

@@ -7,11 +7,11 @@
     <h3>Contact us</h3>
     <hr class="mx-auto">
     <p class="w-50 mx-auto">
-        Phone number: <span>123 456 789</span>
+        Phone number: <span>0306 6000006</span>
         </p>
 
     <p class="w-50 mx-auto">
-        Email address:<span>info@gmail.com</span>
+        Email address:<span>usman@gmail.com</span>
     </p>
 
     <p class="w-50 mx-auto">
