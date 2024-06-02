@@ -18,6 +18,15 @@ if ($product_id) {
     $product = $stmt->get_result()->fetch_assoc();
 }
 
+// Fetch categories
+$categories = [];
+$stmt = $conn->prepare("SELECT category_id, category_name FROM categories");
+$stmt->execute();
+$result = $stmt->get_result();
+while ($row = $result->fetch_assoc()) {
+    $categories[] = $row;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
     $category = $_POST['category'];
@@ -38,7 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $stmt = $conn->prepare("UPDATE products SET product_name = ?, product_category = ?, product_description = ?, product_image = ?, product_image2 = ?, product_image3 = ?, product_image4 = ?, product_price = ?, product_special_offer = ?, product_color = ?, stock = ? WHERE product_id = ?");
     $stmt->bind_param("sssssssdsiii", $name, $category, $description, $image, $image2, $image3, $image4, $price, $special_offer, $color, $stock, $product_id);
+
+    // Debugging
     if ($stmt->execute()) {
+        echo "Product updated successfully.";
         header('Location: product.php');
         exit();
     } else {
@@ -103,7 +115,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <nav>
-        <div>RGB SPOT</div>
+    <a class="navbar-brand" href="dashboard.php" style="text-decoration:none;">
+    <img class="logo" src="../assets/imgs/logo.jpg" alt="Logo"/>
+    <h2 style="display:inline; color:#fb774b;">RGB</h2>
+    <h2 class="brand d-inline-block" style="display:inline;">SPOT</h2>
+</a>
+
         <a href="logout.php?logout=1" class="logout">
             <input type="submit" class="sign_out btn" value="Sign out" name="sign_out">
         </a>
@@ -113,9 +130,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <li><a href="dashboard.php" class="side_bar_menu">Dashboard</a></li>
             <li><a href="orders.php" class="side_bar_menu">Orders</a></li>
             <li><a href="product.php" class="side_bar_menu">Products</a></li>
-            <li><a href="add_new_product.php" class="side_bar_menu">Add new Products</a></li>
-            <li><a href="account.php" class="side_bar_menu">Account</a></li>
-            <li><a href="help.php" class="side_bar_menu">Help</a></li>
+            <li><a href="add_new_product.php" class="side_bar_menu">Add Products</a></li>
+            <li><a href="admin_account.php" class="side_bar_menu">Account</a></li>
+
         </ul>
     </aside>
     <main>
@@ -127,7 +144,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($product['product_name']); ?>" required>
                 
                 <label for="category">Category:</label>
-                <input type="text" id="category" name="category" value="<?php echo htmlspecialchars($product['product_category']); ?>" required>
+                <select id="category" name="category" required>
+                    <?php foreach ($categories as $category) { ?>
+                        <option value="<?php echo $category['category_id']; ?>" <?php echo $category['category_id'] == $product['product_category'] ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($category['category_name']); ?>
+                        </option>
+                    <?php } ?>
+                </select>
                 
                 <label for="description">Description:</label>
                 <textarea id="description" name="description" required><?php echo htmlspecialchars($product['product_description']); ?></textarea>

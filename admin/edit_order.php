@@ -93,7 +93,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <nav>
-        <div>RGB SPOT</div>
+    <a class="navbar-brand" href="dashboard.php" style="text-decoration:none;">
+    <img class="logo" src="../assets/imgs/logo.jpg" alt="Logo"/>
+    <h2 style="display:inline; color:#fb774b;">RGB</h2>
+    <h2 class="brand d-inline-block" style="display:inline;">SPOT</h2>
+</a>
+
         <a href="logout.php?logout=1" class="logout">
             <input type="submit" class="sign_out btn" value="Sign out" name="sign_out">
         </a>
@@ -103,9 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <li><a href="dashboard.php" class="side_bar_menu">Dashboard</a></li>
             <li><a href="orders.php" class="side_bar_menu">Orders</a></li>
             <li><a href="product.php" class="side_bar_menu">Products</a></li>
-            <li><a href="add_new_product.php" class="side_bar_menu">Add new Products</a></li>
-            <li><a href="account.php" class="side_bar_menu">Account</a></li>
-            <li><a href="help.php" class="side_bar_menu">Help</a></li>
+            <li><a href="add_new_product.php" class="side_bar_menu">Add Products</a></li>
+            <li><a href="admin_account.php" class="side_bar_menu">Account</a></li>
         </ul>
     </aside>
     <main>

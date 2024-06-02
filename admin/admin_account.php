@@ -61,7 +61,14 @@ $admin = $stmt->get_result()->fetch_assoc();
 </head>
 <body>
     <nav>
-        <div>RGB SPOT</div>
+
+    <a class="navbar-brand" href="dashboard.php" style="text-decoration:none;">
+    <img class="logo" src="../assets/imgs/logo.jpg" alt="Logo"/>
+    <h2 style="display:inline; color:#fb774b;">RGB</h2>
+    <h2 class="brand d-inline-block" style="display:inline;">SPOT</h2>
+
+
+    
         <a href="logout.php?logout=1" class="logout">
             <input type="submit" class="sign_out btn" value="Sign out" name="sign_out">
         </a>

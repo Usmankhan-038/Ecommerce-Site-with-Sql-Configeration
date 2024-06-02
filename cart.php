@@ -1,11 +1,11 @@
 <?php
 session_start();
+include('server/connection.php');
 
 if (isset($_POST['add_to_cart'])) {
     if (isset($_SESSION['cart'])) {
         $product_array_id = array_column($_SESSION['cart'], 'product_id');
         if (!in_array($_POST['product_id'], $product_array_id)) {
-            $product_id = $_POST['product_id'];
             $count = count($_SESSION['cart']);
             $product_array = array(
                 'product_id' => $_POST['product_id'],
@@ -15,7 +15,6 @@ if (isset($_POST['add_to_cart'])) {
                 'product_quantity' => $_POST['product_quantity']
             );
             $_SESSION['cart'][$count] = $product_array;
-            $_SESSION['update_stock']=$_POST['product_quantity'];
         } else {
             echo '<script>alert("Product is already added to cart")</script>';
         }
@@ -27,7 +26,6 @@ if (isset($_POST['add_to_cart'])) {
             'product_image' => $_POST['product_image'],
             'product_quantity' => $_POST['product_quantity']
         );
-        $_SESSION['update_stock']=$_POST['product_quantity'];
         $_SESSION['cart'][0] = $product_array;
     }
 } else if (isset($_POST['remove_product'])) {
@@ -40,7 +38,6 @@ if (isset($_POST['add_to_cart'])) {
 } else if (isset($_POST['edit'])) {
     foreach ($_SESSION['cart'] as $key => $value) {
         if ($value['product_id'] == $_POST['product_id']) {
-        $_SESSION['update_stock']=$_POST['product_quantity'];
             $_SESSION['cart'][$key]['product_quantity'] = $_POST['product_quantity'];
         }
     }
@@ -48,12 +45,11 @@ if (isset($_POST['add_to_cart'])) {
 
 function calculateTotalCart() {
     $total = 0;
-    $total_quantity=0;
+    $total_quantity = 0;
     if (isset($_SESSION['cart'])) {
-        foreach ($_SESSION['cart'] as $key => $value) 
-        {
+        foreach ($_SESSION['cart'] as $key => $value) {
             $total += $value['product_quantity'] * $value['product_price'];
-            $total_quantity+=$value['product_quantity'];
+            $total_quantity += $value['product_quantity'];
         }
     }
     $_SESSION['total'] = $total;
@@ -65,20 +61,18 @@ calculateTotalCart();
 
 <?php include('layout/header.php') ?>
 
-<!--cart-->
+<!-- Cart -->
 <section class="cart container my-5 py-5">
     <div class="container mt-5">
-        <h2 class="font-weight-bolde">Your Cart</h2>
+        <h2 class="font-weight-bold">Your Cart</h2>
         <hr>
     </div>
-    
     <table class="mt-5 pt-5">
         <tr>
             <th>Product</th>
             <th>Quantity</th>
             <th>Subtotal</th>
         </tr>
-
         <?php if (isset($_SESSION['cart'])) {
             foreach ($_SESSION['cart'] as $key => $value) { ?>
                 <tr>
@@ -111,7 +105,6 @@ calculateTotalCart();
         <?php }
         } ?>
     </table>
-
     <div class="cart-total">
         <table>
             <tr>
@@ -120,7 +113,6 @@ calculateTotalCart();
             </tr>
         </table>
     </div>
-
     <div class="checkout-container">
         <form method="POST" action="checkout.php">
             <input type="submit" class="btn checkout-btn" value="Checkout" name="checkout">
@@ -128,5 +120,5 @@ calculateTotalCart();
     </div>
 </section>
 
-<!---footer-->
+<!-- Footer -->
 <?php include('layout/footer.php') ?>
