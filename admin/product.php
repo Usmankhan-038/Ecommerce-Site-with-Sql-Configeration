@@ -25,8 +25,13 @@ $total_records_per_page = 10;
 $offset = ($page_no - 1) * $total_records_per_page;
 $total_no_of_pages = ceil($total_records / $total_records_per_page);
 
-// Fetch records for the current page
-$stmt2 = $conn->prepare("SELECT * FROM products LIMIT ?, ?");
+// Fetch records for the current page with JOIN on categories table
+$stmt2 = $conn->prepare("
+    SELECT products.*, categories.category_name 
+    FROM products 
+    INNER JOIN categories ON products.product_category = categories.category_id 
+    LIMIT ?, ?
+");
 $stmt2->bind_param("ii", $offset, $total_records_per_page);
 $stmt2->execute();
 $products = $stmt2->get_result();
@@ -114,17 +119,15 @@ $products = $stmt2->get_result();
             color: #fb774b;
             transition: 0.2s;
         }
-        
     </style>
 </head>
 <body>
     <nav>
-    <a class="navbar-brand" href="dashboard.php" style="text-decoration:none;">
-    <img class="logo" src="../assets/imgs/logo.jpg" alt="Logo"/>
-    <h2 style="display:inline; color:#fb774b;">RGB</h2>
-    <h2 class="brand d-inline-block" style="display:inline;">SPOT</h2>
-</a>
-
+        <a class="navbar-brand" href="dashboard.php" style="text-decoration:none;">
+            <img class="logo" src="../assets/imgs/logo.jpg" alt="Logo"/>
+            <h2 style="display:inline; color:#fb774b;">RGB</h2>
+            <h2 class="brand d-inline-block" style="display:inline;">SPOT</h2>
+        </a>
         <a href="logout.php?logout=1" class="logout">
             <input type="submit" class="sign_out btn1" value="Sign out" name="sign_out">
         </a>
@@ -159,7 +162,7 @@ $products = $stmt2->get_result();
                 <td><?php echo $row['product_name']; ?></td>
                 <td><?php echo $row['product_price']; ?></td>
                 <td><?php echo $row['product_special_offer']; ?></td>
-                <td><?php echo $row['product_category']; ?></td>
+                <td><?php echo $row['category_name']; ?></td>
                 <td><?php echo $row['product_color']; ?></td>
                 <td><a href="edit_product.php?id=<?php echo $row['product_id']; ?>" class="btn btn-blue">Edit</a></td>
                 <td><a href="delete_product.php?id=<?php echo $row['product_id']; ?>" class="btn">Delete</a></td>

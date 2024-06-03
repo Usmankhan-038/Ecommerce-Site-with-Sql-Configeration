@@ -74,7 +74,6 @@ $result = $conn->query($query);
             <li><a href="product.php" class="side_bar_menu">Products</a></li>
             <li><a href="add_new_product.php" class="side_bar_menu">Add Products</a></li>
             <li><a href="admin_account.php" class="side_bar_menu">Account</a></li>
-            <li><a href="categories.php" class="side_bar_menu">Categories</a></li>
         </ul>
     </aside>
     <main>
