@@ -7,7 +7,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-// Fetch product rankings based on order count
+
 $query = "
     SELECT p.product_id, p.product_name, COUNT(oi.product_id) AS order_count
     FROM order_items oi

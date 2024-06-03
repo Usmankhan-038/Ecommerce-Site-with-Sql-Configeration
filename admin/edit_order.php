@@ -7,7 +7,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-// Fetch order details
+
 $order_id = isset($_GET['id']) ? $_GET['id'] : '';
 $order = null;
 

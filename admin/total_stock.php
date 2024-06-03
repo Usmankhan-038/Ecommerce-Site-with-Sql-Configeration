@@ -7,7 +7,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-// Fetch products with their category names
+
 $query = "
     SELECT p.product_id, p.product_name, p.stock, c.category_name 
     FROM products p 

@@ -7,14 +7,14 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-// Initialize selected category and price if they are set
+
 $selected_category = isset($_GET['category']) ? $_GET['category'] : '';
 $selected_price = isset($_GET['price']) ? $_GET['price'] : '';
 
-// Get current page number
+
 $page_no = isset($_GET['page_no']) && $_GET['page_no'] != "" ? $_GET['page_no'] : 1;
 
-// Fetch total records
+
 $stmt = $conn->prepare("SELECT COUNT(*) AS total_records FROM products");
 $stmt->execute();
 $stmt->bind_result($total_records);
@@ -25,7 +25,7 @@ $total_records_per_page = 10;
 $offset = ($page_no - 1) * $total_records_per_page;
 $total_no_of_pages = ceil($total_records / $total_records_per_page);
 
-// Fetch records for the current page with JOIN on categories table
+
 $stmt2 = $conn->prepare("
     SELECT products.*, categories.category_name 
     FROM products 

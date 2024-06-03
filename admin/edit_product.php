@@ -7,7 +7,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-// Fetch product details
+
 $product_id = isset($_GET['id']) ? $_GET['id'] : '';
 $product = null;
 
@@ -18,7 +18,7 @@ if ($product_id) {
     $product = $stmt->get_result()->fetch_assoc();
 }
 
-// Fetch categories
+
 $categories = [];
 $stmt = $conn->prepare("SELECT category_id, category_name FROM categories");
 $stmt->execute();
@@ -33,10 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = $_POST['description'];
     $price = $_POST['price'];
     $special_offer = $_POST['special_offer'];
-    $color = isset($_POST['color']) ? $_POST['color'] : ''; // Ensure color is set
+    $color = isset($_POST['color']) ? $_POST['color'] : ''; 
     $stock = $_POST['stock'];
     
-    // Assuming images are updated or retained as is if not provided
+
     $image = $_POST['image'] ?: $product['product_image'];
     $image2 = $_POST['image2'] ?: $product['product_image2'];
     $image3 = $_POST['image3'] ?: $product['product_image3'];

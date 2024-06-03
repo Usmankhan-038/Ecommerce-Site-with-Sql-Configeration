@@ -37,7 +37,7 @@ session_start();
 </head>
 <body>
 
-    <!--Navbar-->
+
     <nav class="navbar navbar-expand-lg bg-white py-3 fixed-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">

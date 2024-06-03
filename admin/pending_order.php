@@ -7,7 +7,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-// Fetch orders with status 'Not Paid'
+
 $query = "
     SELECT o.order_id, o.order_date, u.user_name, p.product_name, SUM(oi.product_quantity) as total_quantity, o.order_cost AS total_price
     FROM orders o

@@ -7,10 +7,10 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-// Fetch current page number
+
 $page_no = isset($_GET['page_no']) && $_GET['page_no'] != "" ? $_GET['page_no'] : 1;
 
-// Fetch total records
+
 $stmt = $conn->prepare("SELECT COUNT(*) AS total_records FROM orders");
 $stmt->execute();
 $stmt->bind_result($total_records);

@@ -7,7 +7,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-// Fetch categories with product count
+
 $query = "
     SELECT c.category_id, c.category_name, COUNT(p.product_id) as product_count 
     FROM categories c 

@@ -17,18 +17,18 @@ if (!isset($_SESSION['logged_in'])) {
         $user_id = $_SESSION['user_id'];
         $order_date = date("Y-m-d H:i:s");
 
-        // Begin a transaction
+
         $conn->begin_transaction();
 
         try {
-            // Insert order into orders table
+
             $stmt = $conn->prepare("INSERT INTO orders (order_cost, order_status, user_id, user_phone, user_city, user_address, order_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->bind_param("isiisss", $total, $order_status, $user_id, $phone, $city, $address, $order_date);
             $stmt->execute();
             $order_id = $stmt->insert_id;
             $_SESSION['order_id'] = $order_id;
 
-            // Insert order items into order_items table and update product stock
+ 
             foreach ($_SESSION['cart'] as $key => $value) {
                 $product_id = $value['product_id'];
                 $product_name = $value['product_name'];
@@ -36,26 +36,25 @@ if (!isset($_SESSION['logged_in'])) {
                 $product_price = $value['product_price'];
                 $product_quantity = $value['product_quantity'];
 
-                // Insert order items
+
                 $stmt = $conn->prepare("INSERT INTO order_items (order_id, product_id, product_name, product_image, user_id, order_date, product_price, product_quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
                 $stmt->bind_param("iissisii", $order_id, $product_id, $product_name, $product_image, $user_id, $order_date, $product_price, $product_quantity);
                 $stmt->execute();
 
-                // Update product stock
+  
                 $stmtStock = $conn->prepare("UPDATE products SET stock = stock - ? WHERE product_id = ?");
                 $stmtStock->bind_param("ii", $product_quantity, $product_id);
                 $stmtStock->execute();
             }
 
-            // Commit the transaction
+
             $conn->commit();
 
-            // Clear the cart
             unset($_SESSION['cart']);
 
             header('location: ../payment.php?order_status=Order placed successfully');
         } catch (Exception $e) {
-            // Rollback the transaction if any error occurs
+  
             $conn->rollback();
             header('location: ../checkout.php?message=Something went wrong, please try again.');
         }
