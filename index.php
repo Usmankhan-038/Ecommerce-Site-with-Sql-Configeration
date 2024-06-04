@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <h5 class="p-name"><?php echo $row['product_name']; ?></h5>
                 <h4 class="p-price"><?php echo $row['product_price']; ?></h4>
-                <?php if ($row['stock'] == 0 || $row['tock'] == null) { ?>
+                <?php if ($row['stock'] == 0 || $row['stock'] == null) { ?>
                     <button class="buy-btn" disabled>Out of Stock</button>
                 <?php } else { ?>
                     <a href="<?php echo "single_product.php?product_id=".$row['product_id']; ?>"><button class="buy-btn">Buy Now</button></a>
