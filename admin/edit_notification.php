@@ -131,8 +131,9 @@ $product_result = $product_stmt->get_result();
             <li><a href="orders.php" class="side_bar_menu">Orders</a></li>
             <li><a href="product.php" class="side_bar_menu">Products</a></li>
             <li><a href="add_new_product.php" class="side_bar_menu">Add Products</a></li>
+            <li><a href="create_notification.php" class="side_bar_menu">Create Notification</a></li>
             <li><a href="admin_account.php" class="side_bar_menu">Account</a></li>
-            <li><a href="notifications.php" class="side_bar_menu">Notifications</a></li>
+
         </ul>
     </aside>
     <main>
