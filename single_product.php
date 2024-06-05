@@ -1,4 +1,5 @@
 <?php
+session_start(); // Start the session
 include('server/connection.php');
 
 if (isset($_GET['product_id'])) {
@@ -7,7 +8,7 @@ if (isset($_GET['product_id'])) {
     $stmt->bind_param("i", $product_id);
     $stmt->execute();
     $product = $stmt->get_result();
-    
+
     // Fetch related products (for simplicity, fetching 4 random products)
     $related_stmt = $conn->prepare("SELECT * FROM products WHERE product_id != ? ORDER BY RAND() LIMIT 4");
     $related_stmt->bind_param("i", $product_id);
@@ -18,7 +19,6 @@ if (isset($_GET['product_id'])) {
     exit();
 }
 ?>
-
 <?php include('layout/header.php'); ?>
 
 <!--single-product-->
@@ -44,24 +44,27 @@ if (isset($_GET['product_id'])) {
             </div>
 
             <div class="col-lg-6 col-md-12 col-sm-12">
-               
                 <h3 class="py-4"><?php echo $row['product_name']; ?></h3>
                 <h2><?php echo $row['product_price']; ?></h2>
-                
-                <form id="add-to-cart-form" action="cart.php" method="POST">
-                    <input type="hidden" name="product_id" value="<?php echo $row['product_id']; ?>">
-                    <input type="hidden" name="product_image" value="<?php echo $row['product_image2']; ?>">
-                    <input type="hidden" name="product_name" value="<?php echo $row['product_name']; ?>">
-                    <input type="hidden" name="product_price" value="<?php echo $row['product_price']; ?>">
-                    <input type="hidden" id="stock_quantity" name="stock_quantity" value="<?php echo $row['stock']; ?>">
-                    
-                    <?php if ($row['stock'] > 0) { ?>
-                        <input type="number" id="product_quantity" name="product_quantity" value="1" min="1" max="<?php echo $row['stock']; ?>"/>
-                        <button class="buy-btn" type="submit" name="add_to_cart">Add To Cart</button>
-                    <?php } else { ?>
-                        <button class="buy-btn" type="button" disabled>Out of Stock</button>
-                    <?php } ?>
-                </form>
+
+                <?php if (isset($_SESSION['logged_in'])) { ?>
+                    <form id="add-to-cart-form" action="cart.php" method="POST">
+                        <input type="hidden" name="product_id" value="<?php echo $row['product_id']; ?>">
+                        <input type="hidden" name="product_image" value="<?php echo $row['product_image2']; ?>">
+                        <input type="hidden" name="product_name" value="<?php echo $row['product_name']; ?>">
+                        <input type="hidden" name="product_price" value="<?php echo $row['product_price']; ?>">
+                        <input type="hidden" id="stock_quantity" name="stock_quantity" value="<?php echo $row['stock']; ?>">
+                        
+                        <?php if ($row['stock'] > 0) { ?>
+                            <input type="number" id="product_quantity" name="product_quantity" value="1" min="1" max="<?php echo $row['stock']; ?>"/>
+                            <button class="buy-btn" type="submit" name="add_to_cart">Add To Cart</button>
+                        <?php } else { ?>
+                            <button class="buy-btn" type="button" disabled>Out of Stock</button>
+                        <?php } ?>
+                    </form>
+                <?php } else { ?>
+                    <button class="buy-btn" onclick="window.location.href='login.php'">Login to Add to Cart</button>
+                <?php } ?>
                 
                 <div id="error-message" style="color: red; display: none;">Quantity exceeds available stock.</div>
 
