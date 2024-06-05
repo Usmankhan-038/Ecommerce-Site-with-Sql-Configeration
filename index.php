@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <img class="img-fluid" src="assets/imgs/1.jpg"/>
             <div class="details">
                 <h2>Extremely Awesome Shoes</h2>
-                <button class="text-uppercase">Shop Now</button>
+               <a href="shop.php"><button class="text-uppercase">Shop Now</button></a> 
             </div>
         </div>
 
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <img class="img-fluid" src="assets/imgs/2.jpg"/>
             <div class="details">
                 <h2> Awesome Jacket</h2>
-                <button class="text-uppercase">Shop Now</button>
+                <a href="shop.php"><button class="text-uppercase">Shop Now</button></a> 
             </div>
         </div>
 
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <img class="img-fluid" src="assets/imgs/3.jpg"/>
             <div class="details">
                 <h2>50% Off Watches</h2>
-                <button class="text-uppercase">Shop Now</button>
+                <a href="shop.php"><button class="text-uppercase">Shop Now</button></a> 
             </div>
         </div>
     </div>
