@@ -41,7 +41,7 @@ session_start();
     <nav class="navbar navbar-expand-lg bg-white py-3 fixed-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <img class="logo" src="assets/imgs/logo.jpg" alt="Logo"/>
+                <img class="logo" src="assets/imgs/logo.png" alt="Logo" />
                 <h2 style="display:inline; color:#fb774b">RGB</h2>
                 <h2 class="brand d-inline-block" style="display:inline">SPOT</h2>
             </a>

@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <nav>
     <a class="navbar-brand" href="dashboard.php" style="text-decoration:none;">
-    <img class="logo" src="../assets/imgs/logo.jpg" alt="Logo"/>
+    <img class="logo" src="../assets/imgs/logo.png" alt="Logo"/>
     <h2 style="display:inline; color:#fb774b;">RGB</h2>
     <h2 class="brand d-inline-block" style="display:inline;">SPOT</h2>
 </a>

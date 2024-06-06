@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row mx-auto pt-5">
             <div class="col-lg-3 col-md-6 col-sm-12">
-                <img class="logo" src="assets/imgs/logo.jpg" alt="Logo"/>
+                <img class="logo" src="assets/imgs/logo.png" alt="Logo"/>
                 <p class="pt-3">We provide the best products for the most affordable prices</p>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
