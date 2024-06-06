@@ -98,14 +98,14 @@
 </section> -->
 
 <!--Brand-->
-<section id="brand" class="container">
+<!-- <section id="brand" class="container">
     <div class="row">
         <img class="img-fluid col-lg-3 col-md-6 col-sm-12" src="assets/imgs/brand 1.jpg"/>
         <img class="img-fluid col-lg-3 col-md-6 col-sm-12" src="assets/imgs/brand 2.jpg"/>
         <img class="img-fluid col-lg-3 col-md-6 col-sm-12" src="assets/imgs/brand 3.jpg"/>
         <img class="img-fluid col-lg-3 col-md-6 col-sm-12" src="assets/imgs/brand 4.jpg"/>
     </div>
-</section>
+</section> -->
 
 <!---NEW-->
 <section id="new" class="w-100">

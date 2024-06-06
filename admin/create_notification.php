@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 session_start();
 include('../server/connection.php');
 
@@ -153,7 +153,7 @@ $product_result = $product_stmt->get_result();
             <h2 style="display:inline; color:#fb774b;">RGB</h2>
             <h2 class="brand d-inline-block" style="display:inline;">SPOT</h2>
         </a>
-        <a href="logout.php?logout=1" class="logout">
+        <!-- <a href="logout.php?logout=1" class="logout"> -->
             <input type="submit" class="sign_out btn1" value="Sign out" name="sign_out">
         </a>
     </nav>
@@ -218,4 +218,4 @@ $product_result = $product_stmt->get_result();
         </table>
     </main>
 </body>
-</html>
+</html> -->

@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 session_start();
 include('../server/connection.php');
 
@@ -167,4 +167,4 @@ $product_result = $product_stmt->get_result();
         <?php } ?>
     </main>
 </body>
-</html>
+</html> -->
