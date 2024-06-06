@@ -64,7 +64,7 @@ session_start();
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="cart.php"><i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                        <span class="cart_quantity"><?php if(isset($_SESSION['quantity']) && $_SESSION['quantity']!=0){echo $_SESSION['quantity'];}?></span></a>
+                        <span class="cart_quantity"><?php if(isset($_SESSION['quantity']) && $_SESSION['quantity']!=0){echo $_SESSION['quantity'];}else { echo "0";}?></span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="account.php"><i class="fa fa-user" aria-hidden="true"></i></a>
