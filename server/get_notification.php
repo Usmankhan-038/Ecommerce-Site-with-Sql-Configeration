@@ -1,30 +1,18 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-include('connection.php'); // Ensure this points to your correct configuration file
+include('connection.php');
+session_start();
+$user_id = $_SESSION['user_id'];
 
-// Check the database connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+$sql = "SELECT n.notification_id, n.message
+        FROM notification n
+        LEFT JOIN user_notification un ON n.notification_id = un.notification_id AND un.user_id = :user_id
+        WHERE un.user_id IS NULL";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute(['user_id' => $user_id]);
+$notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+foreach ($notifications as $notification) {
+    echo $notification['notification_id'] . '::' . $notification['message'] . "\n";
 }
-
-$sql = "SELECT message FROM notifications ORDER BY timestamp DESC";
-$result = $conn->query($sql);
-
-if ($result === FALSE) {
-    die("Error executing query: " . $conn->error);
-}
-
-$messages = array();
-if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        $messages[] = $row['message'];
-    }
-}
-
-echo implode("\n", $messages);
-
-// Close the database connection
-$conn->close();
 ?>

@@ -4,7 +4,7 @@ include('server/connection.php');
 $products = [];
 $total_records = 0;
 $selected_category = "all";  // Default value for category
-$selected_price = 100;  // Default value for price
+$selected_price = 500;  // Default value for price
 
 if (isset($_POST['search'])) {
     $selected_category = $_POST['category'];

@@ -1,77 +1,101 @@
 <?php include('layout/header.php')?>
 <!-- JavaScript to load and display notifications -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    fetchNotifications();
+// document.addEventListener('DOMContentLoaded', function() {
+//     fetchNotifications();
 
-    function fetchNotifications() {
-        fetch('server/get_notification.php')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.text();
-            })
-            .then(data => {
-                const notifications = data.split('\n').filter(Boolean);
-                if (notifications.length) {
-                    displayNotifications(notifications);
-                } else {
-                    console.error('No notifications found');
-                    checkCartQuantity();
-                }
-            })
-            .catch(error => console.error('Error fetching notifications:', error));
-    }
+//     function fetchNotifications() {
+//         fetch('server/get_notification.php')
+//             .then(response => {
+//                 if (!response.ok) {
+//                     throw new Error('Network response was not ok');
+//                 }
+//                 return response.text();
+//             })
+//             .then(data => {
+//                 const notifications = data.split('\n').filter(Boolean);
+//                 if (notifications.length) {
+//                     displayNotifications(notifications);
+//                 } else {
+//                     console.error('No notifications found');
+//                     checkCartQuantity();
+//                 }
+//             })
+//             .catch(error => console.error('Error fetching notifications:', error));
+//     }
 
-    function displayNotifications(notifications) {
-        let currentIndex = 0;
+//     function displayNotifications(notifications) {
+//         let currentIndex = 0;
 
-        function showNotification() {
-            if (currentIndex < notifications.length) {
-                let notification = notifications[currentIndex];
-                window.alert(notification);
-                currentIndex++;
-                setTimeout(showNotification, 3600000); // Show next notification in 1 hour
-            }
-        }
+//         function showNotification() {
+//             if (currentIndex < notifications.length) {
+//                 let notification = notifications[currentIndex].split('::');
+//                 let notificationId = notification[0];
+//                 let message = notification[1];
+//                 window.alert(message);
+//                 markNotificationAsSeen(notificationId);
+//                 currentIndex++;
+//                 setTimeout(showNotification, 3600000); // Show next notification in 1 hour
+//             }
+//         }
 
-        showNotification();
-    }
+//         showNotification();
+//     }
 
-    function checkCartQuantity() {
-        fetch('server/get_cart_quantity.php')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.text();
-            })
-            .then(quantity => {
-                if (parseInt(quantity) > 0) {
-                    window.alert('Please Checkout from your cart. You have ' + quantity + ' items.');
-                }
-            })
-            .catch(error => console.error('Error fetching cart quantity:', error));
-    }
-});
+//     function markNotificationAsSeen(notificationId) {
+//         fetch('server/mark_notification_seen.php', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/x-www-form-urlencoded'
+//             },
+//             body: `notification_id=${notificationId}`
+//         })
+//         .then(response => {
+//             if (!response.ok) {
+//                 throw new Error('Network response was not ok');
+//             }
+//             return response.text();
+//         })
+//         .then(data => console.log(data))
+//         .catch(error => console.error('Error marking notification as seen:', error));
+//     }
+
+//     function checkCartQuantity() {
+//         fetch('server/get_cart_quantity.php')
+//             .then(response => {
+//                 if (!response.ok) {
+//                     throw new Error('Network response was not ok');
+//                 }
+//                 return response.text();
+//             })
+//             .then(quantity => {
+//                 if (parseInt(quantity) > 0) {
+//                     window.alert('Please Checkout from your cart. You have ' + quantity + ' items.');
+//                 }
+//             })
+//             .catch(error => console.error('Error fetching cart quantity:', error));
+//     }
+// });
+
 </script>
 <!---Home-->
 <section id="home">
     <div class="container">
-        <h5>NEW ARRIVAL</h5>
-        <h1><span>Best Prices</span> This Season</h1>
-        <p>Eshop offers the best products for the most affordable price</p>
-        <button>Shop Now</button>
+        <h5 style="color:white">NEW ARRIVAL</h5>
+        <h1 style="color:white"><span>Best Prices</span> This Season</h1>
+        <p style="color:white"> RGBSPOT offers the best products for the most affordable price</p>
+        <a href="#featured"><button>Shop Now</button></a>
     </div>
 </section>
 
-<!-- Notifications -->
+<!-- Notifications
 <section id="notifications" class="container">
     <div id="notification-content" class="text-center">
-        <!-- Notifications will be dynamically loaded here -->
+        <h3>Notifications</h3>
+        <hr class="mx-auto">
+        <p>Here you can check out our latest notifications</p>
     </div>
-</section>
+</section> -->
 
 <!--Brand-->
 <section id="brand" class="container">
@@ -149,8 +173,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <!--BaNNER-->
 <section id="banner" class="my-5 pb-5">
     <div class="container">
-        <h4>MID SEASON'S SALE</h4>
-        <H1>Autum Collection <br> UP to 30% OFF</H1>
+        <h4 style="color:white">MID SEASON'S SALE</h4>
+        <H1 >Autum Collection <br> UP to 30% OFF</H1>
         <button class="text-uppercase">shop now</button>
     </div>
 </section>

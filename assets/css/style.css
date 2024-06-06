@@ -134,11 +134,15 @@ button:hover{
     flex-direction:column;
     justify-content: center;
     align-items: flex-start;
-
+    color:white
 }
 
 #home span{
   color:coral  
+}
+#home h5
+{
+    color:white;
 }
 
 #new.one img{
