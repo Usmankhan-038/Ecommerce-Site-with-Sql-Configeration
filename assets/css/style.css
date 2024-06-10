@@ -569,9 +569,6 @@ margin: 5px auto;
 
 }
 
-.orders th:nth-child(2){
-    /* text-align: center; */
-}
 
 .orders td{
     padding:10px 20px;
