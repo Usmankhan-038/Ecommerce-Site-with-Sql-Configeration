@@ -71,8 +71,8 @@ button:hover{
 
 .navbar{
     font-size: 16px;
-    padding-top: 2rem !important;
-    padding-bottom:2rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom:0.5rem !important;
     top: 0;
     left: 0;
     box-shadow: 0 5px 10px rgba(0, 0,0,0.1);
@@ -569,7 +569,9 @@ margin: 5px auto;
 
 }
 
-
+.orders th:nth-child(2){
+    /* text-align: center; */
+}
 
 .orders td{
     padding:10px 20px;
