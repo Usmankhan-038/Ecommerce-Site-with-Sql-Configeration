@@ -94,7 +94,11 @@ if (isset($_GET['product_id'])) {
                 </div>
                 <h5 class="p-name"><?php echo $related_row['product_name']; ?></h5>
                 <h4 class="p-price"><?php echo $related_row['product_price']; ?></h4>
-                <button class="buy-btn">Buy Now</button>
+                <?php if ($related_row['stock'] == 0 || $related_row['stock'] == null) { ?>
+                                    <p class="text-danger">Out of Stock</p>
+                                <?php } else { ?>
+                                    <a class="btn buy-btn" href="<?php echo "single_product.php?product_id=" . htmlspecialchars($related_row['product_id']); ?>">Buy Now</a>
+                                <?php } ?>
             </div>
         <?php } ?>
     </div>

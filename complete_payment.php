@@ -8,7 +8,8 @@ if(isset($_GET['order_id']))
     $order_id=$_GET['order_id'];
     $order_status = "Paid";
     $total_amount=0;
-    $total_amount=$_SESSION['order_price'];
+    $total_amount=$_SESSION['total'];
+    echo''.$order_id.''.$total_amount.
     $user_id=$_SESSION['user_id'];
     $payment_date=date('Y-m-d H:i:s');
     $stmt = $conn->prepare("UPDATE orders SET order_status=? WHERE order_id=?");

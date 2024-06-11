@@ -109,6 +109,7 @@ $users = $stmt2->get_result();
             <li><a href="orders.php" class="side_bar_menu">Orders</a></li>
             <li><a href="product.php" class="side_bar_menu">Products</a></li>
             <li><a href="add_new_product.php" class="side_bar_menu">Add Products</a></li>
+            <li><a href="create_notification.php" class="side_bar_menu">Notifications</a></li>
             <li><a href="customer.php" class="side_bar_menu">Customers</a></li>
             <li><a href="admin_account.php" class="side_bar_menu">Account</a></li>
         </ul>

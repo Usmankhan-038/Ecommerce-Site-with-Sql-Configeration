@@ -1,5 +1,6 @@
 <?php
 include('server/connection.php');
+session_start();
 
 $products = [];
 $total_records = 0;
@@ -69,6 +70,84 @@ $stmt2 = $conn->prepare($sql_products);
 $stmt2->bind_param($types, ...$params);
 $stmt2->execute();
 $products = $stmt2->get_result();
+
+$user_id = $_SESSION['user_id'];
+
+// Function to create a notification
+function createNotification($conn, $message) {
+    $stmt = $conn->prepare("INSERT INTO notifications (message) VALUES (?)");
+    $stmt->bind_param("s", $message);
+    $stmt->execute();
+    return $conn->insert_id;
+}
+
+// Function to assign notification to user
+function assignNotificationToUser($conn, $user_id, $notification_id) {
+    $stmt = $conn->prepare("INSERT INTO user_notifications (user_id, notification_id) VALUES (?, ?)");
+    $stmt->bind_param("ii", $user_id, $notification_id);
+    $stmt->execute();
+}
+
+// Check for product restock and create notification
+function checkProductRestock($conn) {
+    $stmt = $conn->prepare("SELECT product_id FROM product_restock WHERE restocked = 1 order by product_id desc limit 1");
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $product_id = $row['product_id'];
+        $product_stmt = $conn->prepare("SELECT product_name FROM products WHERE product_id = ?");
+        $product_stmt->bind_param("i", $product_id);
+        $product_stmt->execute();
+        $product_result = $product_stmt->get_result();
+        $product = $product_result->fetch_assoc();
+        
+        $message = "Product " . $product['product_name'] . " has been restocked!";
+        $notification_id = createNotification($conn, $message);
+        
+        $user_stmt = $conn->prepare("SELECT user_id FROM users");
+        $user_stmt->execute();
+        $user_result = $user_stmt->get_result();
+        
+        while ($user = $user_result->fetch_assoc()) {
+            assignNotificationToUser($conn, $user['user_id'], $notification_id);
+        }
+    }
+}
+
+// Display notifications for user
+function getUserNotifications($conn, $user_id) {
+    $stmt = $conn->prepare("
+        SELECT notifications.notification_id, notifications.message 
+        FROM notifications 
+        INNER JOIN user_notifications ON notifications.notification_id = user_notifications.notification_id 
+        WHERE user_notifications.user_id = ? AND user_notifications.seen = 0
+    ");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    return $stmt->get_result();
+}
+
+// Mark notification as seen
+function markNotificationAsSeen($conn, $user_id, $notification_id) {
+    $stmt = $conn->prepare("
+        UPDATE user_notifications 
+        SET seen = 1 
+        WHERE user_id = ? AND notification_id = ?
+    ");
+    $stmt->bind_param("ii", $user_id, $notification_id);
+    $stmt->execute();
+}
+
+// Check for product restock and create notifications
+checkProductRestock($conn);
+
+// Get user notifications
+$notifications = getUserNotifications($conn, $user_id);
+$notifications_array = [];
+while ($notification = $notifications->fetch_assoc()) {
+    $notifications_array[] = $notification;
+}
 ?>
 
 <?php session_start(); ?>
@@ -97,7 +176,40 @@ $products = $stmt2->get_result();
             margin: -2px;
             font-size: 12px;
         }
+        .notification-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #fb774b;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+        }
     </style>
+    <script>
+        function showNotification(message) {
+            var notificationPopup = document.getElementById('notification-popup');
+            notificationPopup.innerHTML = message;
+            notificationPopup.style.display = 'block';
+            setTimeout(function() {
+                notificationPopup.style.display = 'none';
+            }, 5000);
+        }
+
+        window.onload = function() {
+            var notifications = <?php echo json_encode($notifications_array); ?>;
+            if (notifications.length > 0) {
+                showNotification(notifications[0].message);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "mark_notification_seen.php", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("notification_id=" + notifications[0].notification_id);
+            }
+        }
+    </script>
 </head>
 <body>
 
@@ -138,6 +250,8 @@ $products = $stmt2->get_result();
             </div>
         </div>
     </nav>
+    <div id="notification-popup" class="notification-popup"></div>
+
 
     <div class="container my-5 py-5">
         <div class="row">
