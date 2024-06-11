@@ -28,6 +28,7 @@ if(isset($_POST['login_btn']))
             $_SESSION['user_name']=$user_name;
             $_SESSION['user_email']=$user_email;
             $_SESSION['logged_in']=true;
+            $_SESSION['notification_status'] = 'no';
             header('location:account.php?login_success=Login Successfully');
         }
         else

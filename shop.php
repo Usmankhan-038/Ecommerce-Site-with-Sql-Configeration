@@ -250,8 +250,9 @@ while ($notification = $notifications->fetch_assoc()) {
             </div>
         </div>
     </nav>
+    <?php if($_SESSION['notification_status'] == 'no') {?>
     <div id="notification-popup" class="notification-popup"></div>
-
+    <?php $_SESSION['notification_status'] = 'yes';} ?>
 
     <div class="container my-5 py-5">
         <div class="row">

@@ -27,6 +27,7 @@ if(isset($_POST['login_btn']))
             $_SESSION['admin_name']=$admin_name;
             $_SESSION['admin_email']=$admin_email;
             $_SESSION['admin_logged_in']=true;
+            $_SESSION['notification_status'] = 'no';
             header('location:dashboard.php?login_success=Login Successfully');
         }
         else
